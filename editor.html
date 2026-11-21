@@ -1,0 +1,785 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Site Editor</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='3' y='3' width='26' height='26' rx='7' fill='%232f6fed'/%3E%3C/svg%3E">
+<style>
+  :root {
+    --bg: #f4f5f7; --panel: #ffffff; --text: #16181d; --muted: #616877; --border: #e1e4e9;
+    --field: #ffffff; --hover: #eef0f3; --accent: #2f6fed; --danger: #d92d20; --ok: #12805c;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0e1014; --panel: #161920; --text: #e7e9ee; --muted: #99a0ad; --border: #2a2f39;
+      --field: #0f1217; --hover: #1f232c; --accent: #5b8dff; --danger: #f97066; --ok: #47cd89;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0e1014; --panel: #161920; --text: #e7e9ee; --muted: #99a0ad; --border: #2a2f39;
+    --field: #0f1217; --hover: #1f232c; --accent: #5b8dff; --danger: #f97066; --ok: #47cd89;
+    color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  html, body { height: 100%; }
+  body { margin: 0; display: flex; flex-direction: column; background: var(--bg); color: var(--text);
+         font: 14px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, Helvetica, Arial, sans-serif; }
+  a { color: var(--accent); }
+  code { font-family: ui-monospace, Consolas, monospace; font-size: 12px; background: var(--hover); padding: 0 4px; border-radius: 4px; }
+  svg.ic { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+  button { font: inherit; cursor: pointer; border-radius: 8px; padding: 7px 12px; border: 1px solid var(--border);
+           background: var(--panel); color: var(--text); white-space: nowrap; }
+  button:hover { background: var(--hover); }
+  button.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  button.primary:hover { filter: brightness(1.08); background: var(--accent); }
+  button:disabled { opacity: .5; cursor: default; }
+
+  /* Header */
+  .bar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 10px 16px;
+         background: var(--panel); border-bottom: 1px solid var(--border); }
+  .bar h1 { font-size: 15px; margin: 0; font-weight: 650; }
+  .status { font-size: 12.5px; color: var(--muted); display: inline-flex; align-items: center; gap: 6px; }
+  .status::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--ok); }
+  .status.dirty::before { background: #f5a524; }
+  .bar .actions { margin-left: auto; display: flex; gap: 8px; flex-wrap: wrap; }
+
+  .notice { display: flex; align-items: center; gap: 12px; padding: 8px 16px; font-size: 13px;
+            background: color-mix(in srgb, var(--accent) 12%, var(--panel)); border-bottom: 1px solid var(--border); }
+  .notice.error { background: color-mix(in srgb, var(--danger) 14%, var(--panel)); }
+  .notice button { padding: 3px 10px; font-size: 12.5px; }
+
+  /* Layout */
+  .layout { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(340px, 470px) 1fr; }
+  .form { overflow-y: auto; padding: 16px; border-right: 1px solid var(--border); }
+  .preview { display: flex; flex-direction: column; min-height: 0; min-width: 0; }
+  .pbar { display: flex; align-items: center; gap: 12px; padding: 8px 14px; border-bottom: 1px solid var(--border);
+          background: var(--panel); font-size: 13px; color: var(--muted); }
+  .pbar a { margin-left: auto; text-decoration: none; }
+  .seg { display: inline-flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+  .seg button { border: 0; border-radius: 0; padding: 4px 10px; font-size: 12.5px; background: transparent; color: var(--muted); }
+  .seg button.on { background: var(--hover); color: var(--text); }
+  .frame-wrap { flex: 1; min-height: 0; display: flex; justify-content: center; padding: 14px; }
+  iframe { width: 100%; height: 100%; border: 1px solid var(--border); border-radius: 12px; background: #fff;
+           box-shadow: 0 4px 24px rgba(0,0,0,.06); transition: width .25s ease; }
+
+  /* Cards */
+  .intro { color: var(--muted); font-size: 13px; margin: 0 2px 14px; }
+  details.card { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; margin-bottom: 10px; }
+  details > summary { list-style: none; cursor: pointer; user-select: none; }
+  details > summary::-webkit-details-marker { display: none; }
+  details.card > summary { display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-radius: 12px; }
+  details.card > summary:hover { background: var(--hover); }
+  .chev { transition: transform .15s; color: var(--muted); flex: none; }
+  details[open] > summary .chev { transform: rotate(90deg); }
+  .st { flex: 1; min-width: 0; }
+  .sl { font-weight: 600; font-size: 14.5px; }
+  .sd { color: var(--muted); font-size: 12.5px; }
+  .badge { font-size: 11.5px; padding: 1px 8px; border-radius: 999px; background: var(--hover); color: var(--muted); border: 1px solid var(--border); white-space: nowrap; }
+  .card-body { padding: 2px 14px 16px; border-top: 1px solid var(--border); }
+
+  /* Fields */
+  .field { margin-top: 12px; }
+  .field > label { display: block; font-weight: 550; font-size: 12.5px; margin-bottom: 4px; }
+  input[type=text], input[type=number], input[type=password], select, textarea {
+    width: 100%; padding: 8px 10px; border: 1px solid var(--border); border-radius: 8px;
+    background: var(--field); color: var(--text); font: inherit; }
+  textarea { resize: vertical; min-height: 64px; line-height: 1.5; overflow: hidden; }
+  input:focus, select:focus, textarea:focus { outline: 2px solid color-mix(in srgb, var(--accent) 35%, transparent); border-color: var(--accent); }
+  .hint { color: var(--muted); font-size: 12px; margin-top: 4px; }
+  .field.check { display: flex; align-items: center; gap: 8px; }
+  .field.check > label { margin: 0; font-size: 13.5px; }
+  input[type=checkbox] { width: 16px; height: 16px; accent-color: var(--accent); margin: 0; }
+  .color { display: flex; gap: 8px; }
+  .color input[type=color] { width: 44px; height: 37px; padding: 2px; border: 1px solid var(--border); border-radius: 8px; background: var(--field); cursor: pointer; }
+  fieldset.group { border: 1px solid var(--border); border-radius: 10px; margin: 14px 0 0; padding: 4px 12px 12px; }
+  fieldset.group legend { font-size: 12.5px; font-weight: 600; padding: 0 4px; }
+  .glabel { font-weight: 600; font-size: 12.5px; margin: 16px 0 2px; }
+
+  /* Array items */
+  details.item { border: 1px solid var(--border); border-radius: 10px; margin-top: 8px; background: var(--bg); }
+  details.item > summary { display: flex; align-items: center; gap: 8px; padding: 6px 6px 6px 10px; border-radius: 10px; }
+  details.item > summary:hover { background: var(--hover); }
+  .item-title { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 500; }
+  .item-body { padding: 0 12px 12px; }
+  .tools { display: flex; gap: 1px; flex: none; }
+  .tbtn { border: 0; background: transparent; color: var(--muted); width: 28px; height: 28px; padding: 0;
+          border-radius: 6px; display: grid; place-items: center; }
+  .tbtn:hover { background: var(--panel); color: var(--text); }
+  .tbtn.del:hover { color: var(--danger); }
+  .tbtn:disabled { opacity: .25; background: transparent; }
+  .prim { display: flex; gap: 6px; margin-top: 6px; align-items: center; }
+  button.add { margin-top: 10px; width: 100%; border-style: dashed; color: var(--muted); background: transparent; }
+  button.add:hover { color: var(--accent); border-color: var(--accent); background: transparent; }
+
+  .order-row { display: flex; align-items: center; gap: 10px; padding: 5px 6px 5px 10px; margin-top: 6px;
+               border: 1px solid var(--border); border-radius: 9px; background: var(--bg); }
+  .order-row.off .oname { color: var(--muted); text-decoration: line-through; }
+  .onum { color: var(--muted); font-size: 12px; width: 14px; text-align: right; font-variant-numeric: tabular-nums; }
+  .oname { flex: 1; font-weight: 500; }
+  .otoggle { display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; color: var(--muted); cursor: pointer; }
+
+  /* Toast & dialog */
+  .toast { position: fixed; left: 50%; bottom: 22px; transform: translate(-50%, 16px); opacity: 0; pointer-events: none;
+           display: flex; align-items: center; gap: 12px; padding: 10px 14px; border-radius: 10px; max-width: calc(100% - 32px);
+           background: #1d2028; color: #f2f3f5; box-shadow: 0 8px 30px rgba(0,0,0,.25); transition: .2s; z-index: 50; font-size: 13.5px; }
+  .toast.show { opacity: 1; transform: translate(-50%, 0); pointer-events: auto; }
+  .toast button { padding: 3px 10px; background: transparent; color: #8fb2ff; border-color: #3a3f4b; }
+  dialog { border: 1px solid var(--border); border-radius: 14px; background: var(--panel); color: var(--text);
+           width: min(500px, calc(100% - 32px)); padding: 22px; }
+  dialog::backdrop { background: rgba(10, 12, 16, .45); }
+  dialog h2 { margin: 0 0 4px; font-size: 17px; }
+  dialog p.muted { margin: 0 0 6px; color: var(--muted); font-size: 13px; }
+  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .dlg-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 18px; }
+  .result { margin-top: 14px; padding: 10px 12px; border-radius: 8px; font-size: 13px; background: var(--hover); }
+  .result.err { background: color-mix(in srgb, var(--danger) 14%, var(--panel)); }
+  .result.ok { background: color-mix(in srgb, var(--ok) 16%, var(--panel)); }
+
+  @media (max-width: 900px) {
+    html, body { height: auto; }
+    .layout { grid-template-columns: 1fr; }
+    .form { border-right: 0; overflow: visible; }
+    .frame-wrap { height: 85vh; flex: none; }
+    .bar .actions { margin-left: 0; width: 100%; }
+    .row2 { grid-template-columns: 1fr; gap: 0; }
+  }
+</style>
+<script src="content.js"></script>
+</head>
+<body>
+<header class="bar">
+  <h1>Site editor</h1>
+  <span id="status" class="status">Up to date</span>
+  <div class="actions">
+    <button id="btnImport" type="button" title="Load a content.js file">Import…</button>
+    <input type="file" id="fileInput" accept=".js,.json,text/javascript,application/json" hidden>
+    <button id="btnRevert" type="button" title="Throw away your changes">Revert</button>
+    <button id="btnDownload" type="button" title="Save your changes as a new content.js">Download content.js</button>
+    <button id="btnPublish" type="button" class="primary">Publish to GitHub</button>
+  </div>
+</header>
+<div id="notice" class="notice" hidden></div>
+
+<div class="layout">
+  <div class="form" id="formPane">
+    <p class="intro">Edit anything below — the preview updates as you type and your draft is kept in this browser. When you're happy, <b>Publish to GitHub</b> or <b>Download content.js</b> and replace the file in your repository.</p>
+    <div id="form"></div>
+  </div>
+  <div class="preview">
+    <div class="pbar">
+      <span>Live preview</span>
+      <div class="seg" role="group" aria-label="Preview width">
+        <button type="button" data-w="100%" class="on">Desktop</button>
+        <button type="button" data-w="390px">Mobile</button>
+      </div>
+      <a href="index.html" target="_blank" rel="noopener">Open site ↗</a>
+    </div>
+    <div class="frame-wrap"><iframe id="frame" src="index.html?preview=1" title="Live preview of your site"></iframe></div>
+  </div>
+</div>
+
+<dialog id="pubDlg">
+  <form id="pubForm">
+    <h2>Publish to GitHub</h2>
+    <p class="muted">Commits your changes as <code>content.js</code> straight to your repository. GitHub Pages updates the live site about a minute later.</p>
+    <div class="row2">
+      <div class="field"><label for="ghOwner">GitHub username</label><input type="text" id="ghOwner" required autocomplete="off" placeholder="your-username"></div>
+      <div class="field"><label for="ghRepo">Repository</label><input type="text" id="ghRepo" required autocomplete="off" placeholder="your-username.github.io"></div>
+    </div>
+    <div class="row2">
+      <div class="field"><label for="ghBranch">Branch</label><input type="text" id="ghBranch" value="main" autocomplete="off"></div>
+      <div class="field"><label for="ghPath">File</label><input type="text" id="ghPath" value="content.js" autocomplete="off"></div>
+    </div>
+    <div class="field">
+      <label for="ghToken">Access token</label>
+      <input type="password" id="ghToken" required autocomplete="off" spellcheck="false">
+      <div class="hint">Create a <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">fine-grained token</a> for this one repository with <b>Contents: Read and write</b>. It's only sent to api.github.com.</div>
+    </div>
+    <div class="field check"><input type="checkbox" id="ghRemember"><label for="ghRemember">Remember token in this browser</label></div>
+    <div class="field"><label for="ghMsg">Commit message</label><input type="text" id="ghMsg" value="Update site content"></div>
+    <div id="pubResult" class="result" hidden></div>
+    <div class="dlg-actions">
+      <button type="button" id="pubCancel">Close</button>
+      <button type="submit" class="primary" id="pubGo">Publish</button>
+    </div>
+  </form>
+</dialog>
+
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  "use strict";
+  const $ = (s) => document.querySelector(s);
+  const clone = (o) => JSON.parse(JSON.stringify(o));
+  const store = {
+    get(k, s) { try { return (s || localStorage).getItem(k); } catch (e) { return null; } },
+    set(k, v, s) { try { (s || localStorage).setItem(k, v); } catch (e) {} },
+    del(k, s) { try { (s || localStorage).removeItem(k); } catch (e) {} }
+  };
+  const session = (() => { try { return sessionStorage; } catch (e) { return null; } })();
+  const KEYS = { draft: "site-editor:draft", published: "site-editor:published", gh: "site-editor:github", token: "site-editor:token" };
+
+  /* ---------------- editor configuration ---------------- */
+  const SECTION_KEYS = ["highlights", "about", "news", "experience", "education", "projects", "publications", "skills", "puzzles", "contact"];
+  const TOP = {
+    settings: { label: "Site settings", desc: "Tab title, accent color, theme, footer." },
+    profile: { label: "Profile", desc: "Name, headline and photo at the top of the page." },
+    links: { label: "Links", desc: "Buttons under your name — GitHub, LinkedIn, email…" },
+    pages: { label: "Pages (top menu)", desc: "The pages in your menu and which sections each one shows. The first page is your home page." },
+    sectionOrder: { label: "Sections: show or hide", desc: "Switch sections on or off. Their order comes from Pages." },
+    highlights: { label: "Highlights", desc: "Big numbers under the header — results, grades, rankings." },
+    puzzles: { label: "Puzzle corner", desc: "Brain teasers with a reveal-answer button." },
+    about: { label: "About", desc: "Your introduction." },
+    news: { label: "News", desc: "Short dated updates." },
+    experience: { label: "Experience", desc: "Jobs, internships, research positions." },
+    education: { label: "Education", desc: "Degrees and schools." },
+    projects: { label: "Projects", desc: "Cards with links, images and tags." },
+    publications: { label: "Publications", desc: "Papers, articles, talks." },
+    skills: { label: "Skills", desc: "Grouped lists shown as chips." },
+    customSections: { label: "Custom sections", desc: "Anything else — Teaching, Awards, Talks…" },
+    contact: { label: "Contact", desc: "Closing note and email button." }
+  };
+  const LABELS = {
+    show: "Show this section", title: "Section heading", siteTitle: "Browser tab title", accentColor: "Accent color",
+    footerText: "Footer text", avatar: "Photo", cvUrl: "CV / résumé link", url: "Link (URL)", repo: "Code repository",
+    image: "Image", pdf: "PDF link", code: "Code link", list: "Items", label: "Button text", start: "Start", end: "End",
+    "settings.description": "Search & social description",
+    "news.items": "News items", "experience.items": "Positions", "education.items": "Degrees", "projects.items": "Projects",
+    "publications.items": "Publications", "skills.groups": "Skill groups",
+    "customSections.title": "Heading", "publications.items.title": "Paper title", "projects.items.name": "Project name",
+    "skills.groups.name": "Group name", "experience.items.url": "Organization website", "education.items.url": "Institution website",
+    "publications.items.url": "Paper link", "projects.items.url": "Website / demo link",
+    "highlights.items": "Highlights", "puzzles.items": "Puzzles", "highlights.items.value": "Big number",
+    "highlights.items.label": "Caption", "pages.title": "Menu name", "pages.sections": "Sections on this page", "about.more": "Second paragraph", banner: "Banner image", chart: "Bar chart data", chartLabel: "Chart title",
+    intro: "Intro line", question: "Question", answer: "Answer"
+  };
+  const MD = "Supports <b>**bold**</b>, <i>*italic*</i>, <code>[text](https://…)</code> links and <code>- </code> bullet lists. Blank line = new paragraph.";
+  const HINTS = {
+    text: MD, description: MD,
+    "settings.description": "Shown by search engines and when your link is shared.",
+    "settings.theme": "“auto” follows each visitor's system setting. Visitors can still toggle it.",
+    "settings.footerText": "Inline formatting and links allowed.",
+    "profile.headline": "e.g. PhD student at **University** — inline formatting allowed.",
+    "profile.tagline": "A sentence under your headline.",
+    "profile.email": "Used for the button in the Contact section.",
+    avatar: "Upload an image to your repo (e.g. <code>assets/avatar.jpg</code>) and put its path here, or paste an image URL. Empty = your initials.",
+    image: "Optional. A path in your repo (e.g. <code>assets/project.png</code>) or an image URL.",
+    cvUrl: "Optional, e.g. <code>assets/cv.pdf</code> — adds a highlighted “CV” button.",
+    tags: "Comma-separated, e.g. <code>Python, Data</code>.", list: "Comma-separated.",
+    icon: "“auto” picks an icon based on the link.",
+    "links.url": "Full address, or <code>mailto:you@example.com</code> for email.",
+    authors: "Your profile name is bolded automatically.",
+    "news.collapse": "Text shown next to the folded title. Empty = always open.",
+    "news.items.text": "One line. Inline formatting and links allowed.",
+    "news.items.date": "Any text, e.g. <code>Nov 2026</code>.",
+    "news.items.image": "Optional picture shown under the text, e.g. <code>assets/img/photo.jpg</code>.",
+    "news.items.imageAlt": "Short description of the picture, for screen readers.",
+    "pages.sections": "Comma-separated, in order. Names: <code>about, news, experience, projects, education, skills, custom, puzzles, publications, highlights, contact</code>.",
+    "pages.intro": "Optional line under the page title.",
+    "profile.banner": "Optional wide image for the home page (e.g. <code>assets/banner.jpg</code>). Empty = animated price-path banner.",
+    "profile.avatar": "Your photo, shown on the right of the home page. Upload it to your repo (e.g. <code>assets/photo.jpg</code>) and put the path here.",
+    "about.more": "Shown after your CV and email lines, e.g. hobbies.",
+    "highlights.items.value": "Keep it short, e.g. <code>7th / 62</code> or <code>A*A*A*</code>.",
+    chart: "Optional. <code>Label:number</code> pairs, comma-separated, e.g. <code>Market making:6900, Taking:6100</code>. A project with a chart is shown full-width as Featured.",
+    question: MD, answer: MD
+  };
+  const ENUMS = { theme: ["auto", "light", "dark"], icon: ["auto", "github", "linkedin", "twitter", "mail", "scholar", "cv", "link"] };
+  const LONG = new Set(["text", "description", "tagline", "question", "answer", "more"]);
+  const PLACEHOLDERS = { url: "https://…", repo: "https://github.com/…", image: "assets/…", pdf: "https://… or assets/….pdf" };
+  const SINGULAR = {
+    links: "link", "news.items": "news item", "experience.items": "position", "education.items": "degree",
+    "projects.items": "project", "publications.items": "publication", "skills.groups": "skill group", customSections: "custom section", pages: "page",
+    "highlights.items": "highlight", "puzzles.items": "puzzle"
+  };
+  const TEMPLATES = {
+    links: { label: "New link", url: "https://", icon: "auto" },
+    "news.items": { date: "", text: "", image: "", imageAlt: "" },
+    "experience.items": { role: "", organization: "", url: "", location: "", start: "", end: "", description: "" },
+    "education.items": { degree: "", institution: "", url: "", location: "", start: "", end: "", description: "" },
+    "projects.items": { name: "", description: "", url: "", repo: "", image: "", tags: "", chart: "", chartLabel: "" },
+    "highlights.items": { value: "", label: "" },
+    "puzzles.items": { question: "", answer: "" },
+    "publications.items": { title: "", authors: "", venue: "", year: "", url: "", pdf: "", code: "" },
+    "skills.groups": { name: "", list: "" },
+    customSections: { show: true, title: "New section", text: "" },
+    pages: { title: "New page", intro: "", sections: "" }
+  };
+  const SVG = (d, cls) => `<svg class="ic ${cls || ""}" viewBox="0 0 24 24" aria-hidden="true">${d}</svg>`;
+  const I = {
+    chev: SVG('<path d="m9 6 6 6-6 6"/>', "chev"),
+    up: SVG('<path d="m18 15-6-6-6 6"/>'), down: SVG('<path d="m6 9 6 6 6-6"/>'),
+    dup: SVG('<rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>'),
+    del: SVG('<path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>')
+  };
+
+  /* ---------------- state ---------------- */
+  const fileLoaded = !!(window.SITE && typeof window.SITE === "object");
+  const ORIGINAL = clone(fileLoaded ? window.SITE : {});
+  const fileJson = JSON.stringify(ORIGINAL);
+  let baseline = fileJson;
+  let state = null;
+
+  const draft = store.get(KEYS.draft), published = store.get(KEYS.published);
+  if (published === fileJson) store.del(KEYS.published);
+  if (draft && draft !== fileJson) {
+    try {
+      state = JSON.parse(draft);
+      if (draft === published) {
+        baseline = published;
+        notice("Showing the version you last published — GitHub Pages can take a few minutes to serve the new content.js.");
+      } else {
+        notice("Restored your unsaved changes from last time (kept in this browser only).", "Discard them", revert);
+      }
+    } catch (e) { state = null; }
+  } else if (draft) store.del(KEYS.draft);
+  if (!state) state = clone(ORIGINAL);
+  if (!fileLoaded) notice("Couldn't load content.js — make sure it sits next to editor.html and is valid. You can also Import a copy.", null, null, true);
+  normalize();
+
+  function normalize() {
+    if (!state || typeof state !== "object" || Array.isArray(state)) state = {};
+    const valid = (k) => k === "custom" ? Array.isArray(state.customSections)
+      : !!(state[k] && typeof state[k] === "object" && !Array.isArray(state[k]));
+    const order = Array.isArray(state.sectionOrder) ? state.sectionOrder : [];
+    state.sectionOrder = order.filter((k, i) => valid(k) && order.indexOf(k) === i);
+    SECTION_KEYS.concat("custom").forEach((k) => { if (valid(k) && !state.sectionOrder.includes(k)) state.sectionOrder.push(k); });
+  }
+
+  /* ---------------- form rendering ---------------- */
+  const form = $("#form"), formPane = $("#formPane"), frame = $("#frame");
+  const openTop = new Set(["profile"]);
+  const openItems = new WeakSet();
+  let uid = 0;
+
+  function el(tag, cls, text) {
+    const e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (text != null) e.textContent = text;
+    return e;
+  }
+  const pathKey = (path) => path.filter((p) => typeof p !== "number").join(".");
+  const titleCase = (k) => k.replace(/([a-z])([A-Z])/g, "$1 $2").replace(/^./, (c) => c.toUpperCase());
+  const labelFor = (key, path) => LABELS[pathKey(path)] || LABELS[key] || titleCase(String(key));
+
+  function build() {
+    const ps = formPane.scrollTop, ws = window.scrollY;
+    form.innerHTML = "";
+    const order = ["settings", "profile", "links", "pages", "sectionOrder"]
+      .concat(state.sectionOrder.map((k) => (k === "custom" ? "customSections" : k)));
+    Object.keys(state).forEach((k) => { if (!order.includes(k)) order.push(k); });
+    order.filter((k) => k in state).forEach((k) => form.append(topCard(k)));
+    formPane.scrollTop = ps; window.scrollTo(0, ws);
+    requestAnimationFrame(() => form.querySelectorAll("textarea").forEach(autosize));
+  }
+
+  function topCard(key) {
+    const meta = TOP[key] || { label: titleCase(key) };
+    const d = el("details", "card");
+    d.open = openTop.has(key);
+    const s = el("summary");
+    s.innerHTML = I.chev;
+    const t = el("div", "st");
+    t.append(el("div", "sl", meta.label));
+    if (meta.desc) t.append(el("div", "sd", meta.desc));
+    s.append(t);
+    const v = state[key];
+    if (v && typeof v === "object" && !Array.isArray(v) && v.show === false) s.append(el("span", "badge", "Hidden"));
+    s.addEventListener("click", () => { if (!d.open) scrollPreview(key); });
+    d.addEventListener("toggle", () => { d.open ? openTop.add(key) : openTop.delete(key); });
+    const body = el("div", "card-body");
+    if (key === "sectionOrder") renderOrder(body);
+    else if (Array.isArray(v)) renderArray(body, v, [key]);
+    else if (v && typeof v === "object") renderObject(body, v, [key]);
+    else body.append(fieldRow(state, key, [key]));
+    d.append(s, body);
+    return d;
+  }
+
+  function renderObject(container, obj, path) {
+    Object.keys(obj).forEach((key) => {
+      const v = obj[key], p = path.concat(key);
+      if (Array.isArray(v)) {
+        container.append(el("div", "glabel", labelFor(key, p)));
+        renderArray(container, v, p);
+      } else if (v && typeof v === "object") {
+        const g = el("fieldset", "group");
+        g.append(el("legend", null, labelFor(key, p)));
+        renderObject(g, v, p);
+        container.append(g);
+      } else container.append(fieldRow(obj, key, p));
+    });
+  }
+
+  function fieldRow(obj, key, path) {
+    const pk = pathKey(path), v = obj[key], id = "f" + ++uid;
+    const row = el("div", "field");
+    const lab = el("label", null, labelFor(key, path));
+    lab.htmlFor = id;
+    const set = (val) => { obj[key] = val; changed(); };
+    let input;
+    if (typeof v === "boolean") {
+      row.classList.add("check");
+      input = el("input"); input.type = "checkbox"; input.checked = v;
+      input.addEventListener("change", () => { obj[key] = input.checked; changed(true); });
+      row.append(input, lab);
+    } else {
+      row.append(lab);
+      if (ENUMS[key]) {
+        input = el("select");
+        const opts = ENUMS[key].includes(v) ? ENUMS[key] : ENUMS[key].concat(v == null ? [] : [String(v)]);
+        opts.forEach((o) => { const op = el("option", null, o); op.value = o; input.append(op); });
+        input.value = v;
+        input.addEventListener("change", () => set(input.value));
+        row.append(input);
+      } else if (/color$/i.test(key)) {
+        const wrap = el("div", "color");
+        const picker = el("input"); picker.type = "color";
+        input = el("input"); input.type = "text"; input.value = v || "";
+        const hex = (x) => /^#[0-9a-f]{6}$/i.test(x);
+        picker.value = hex(v) ? v : "#2f6fed";
+        picker.setAttribute("aria-label", "Pick color");
+        picker.addEventListener("input", () => { input.value = picker.value; set(picker.value); });
+        input.addEventListener("input", () => { if (hex(input.value)) picker.value = input.value; set(input.value); });
+        wrap.append(picker, input);
+        row.append(wrap);
+      } else if (typeof v === "number") {
+        input = el("input"); input.type = "number"; input.value = v;
+        input.addEventListener("input", () => set(input.value === "" ? 0 : Number(input.value)));
+        row.append(input);
+      } else if (LONG.has(key)) {
+        input = el("textarea"); input.value = v == null ? "" : v; input.rows = 2;
+        input.addEventListener("input", () => { set(input.value); autosize(input); });
+        row.append(input);
+      } else {
+        input = el("input"); input.type = "text"; input.value = v == null ? "" : v;
+        input.spellcheck = !/url|repo|pdf|code|image|avatar|email/i.test(key);
+        if (PLACEHOLDERS[key]) input.placeholder = PLACEHOLDERS[key];
+        input.addEventListener("input", () => set(input.value));
+        row.append(input);
+      }
+    }
+    input.id = id;
+    const hint = HINTS[pk] || HINTS[key];
+    if (hint) { const h = el("div", "hint"); h.innerHTML = hint; row.append(h); }
+    return row;
+  }
+
+  function autosize(t) { t.style.height = "auto"; t.style.height = t.scrollHeight + 2 + "px"; }
+
+  function itemTitle(it, i) {
+    const a = it.title || it.name || it.role || it.degree || it.value || it.question || it.label || it.date || "";
+    const b = it.organization || it.institution || it.venue || it.text || it.list || (it.value ? it.label : "") || "";
+    return [a, b].filter(Boolean).join(" · ") || "Untitled " + (i + 1);
+  }
+
+  function renderArray(container, arr, path) {
+    const pk = pathKey(path);
+    arr.forEach((item, i) => {
+      if (item && typeof item === "object" && !Array.isArray(item)) {
+        const d = el("details", "item");
+        d.open = openItems.has(item);
+        const s = el("summary");
+        s.innerHTML = I.chev;
+        const t = el("span", "item-title", itemTitle(item, i));
+        s.append(t, tools(arr, i));
+        const b = el("div", "item-body");
+        renderObject(b, item, path.concat(i));
+        d.append(s, b);
+        d.addEventListener("toggle", () => {
+          if (d.open) { openItems.add(item); d.querySelectorAll("textarea").forEach(autosize); } else openItems.delete(item);
+        });
+        d.addEventListener("input", () => { t.textContent = itemTitle(item, i); });
+        container.append(d);
+      } else {
+        const r = el("div", "prim");
+        const inp = el("input"); inp.type = "text"; inp.value = item == null ? "" : item;
+        inp.addEventListener("input", () => { arr[i] = inp.value; changed(); });
+        r.append(inp, tools(arr, i));
+        container.append(r);
+      }
+    });
+    const add = el("button", "add", "+ Add " + (SINGULAR[pk] || "item"));
+    add.type = "button";
+    add.addEventListener("click", () => {
+      const n = makeNew(arr, pk);
+      arr.push(n);
+      if (n && typeof n === "object") openItems.add(n);
+      changed(true);
+    });
+    container.append(add);
+  }
+
+  function makeNew(arr, pk) {
+    if (TEMPLATES[pk]) return clone(TEMPLATES[pk]);
+    const first = arr.find((x) => x != null);
+    const blank = (x) => Array.isArray(x) ? [] : x && typeof x === "object"
+      ? Object.fromEntries(Object.keys(x).map((k) => [k, blank(x[k])])) : typeof x === "boolean" ? x : typeof x === "number" ? 0 : "";
+    return first === undefined ? "" : blank(first);
+  }
+
+  function tbtn(svg, title, disabled, fn, cls) {
+    const b = el("button", "tbtn" + (cls ? " " + cls : ""));
+    b.type = "button"; b.title = title; b.setAttribute("aria-label", title);
+    b.innerHTML = svg; b.disabled = disabled;
+    b.addEventListener("click", (e) => { e.preventDefault(); e.stopPropagation(); fn(); });
+    return b;
+  }
+  function swap(arr, i, j) { const t = arr[i]; arr[i] = arr[j]; arr[j] = t; changed(true); }
+
+  function tools(arr, i) {
+    const w = el("span", "tools");
+    w.append(
+      tbtn(I.up, "Move up", i === 0, () => swap(arr, i, i - 1)),
+      tbtn(I.down, "Move down", i === arr.length - 1, () => swap(arr, i, i + 1)),
+      tbtn(I.dup, "Duplicate", false, () => {
+        const c = clone(arr[i]);
+        arr.splice(i + 1, 0, c);
+        if (c && typeof c === "object") openItems.add(c);
+        changed(true);
+      }),
+      tbtn(I.del, "Delete", false, () => {
+        const removed = arr.splice(i, 1)[0];
+        changed(true);
+        toast("Item deleted.", "Undo", () => { arr.splice(Math.min(i, arr.length), 0, removed); changed(true); });
+      }, "del")
+    );
+    return w;
+  }
+
+  function renderOrder(body) {
+    const order = state.sectionOrder;
+    order.forEach((k, i) => {
+      const row = el("div", "order-row");
+      const sec = k === "custom" ? null : state[k];
+      row.append(el("span", "onum", String(i + 1)));
+      if (sec) {
+        row.append(el("span", "oname", sec.title || (TOP[k] && TOP[k].label) || k));
+        if (sec.show === false) row.classList.add("off");
+        const lab = el("label", "otoggle");
+        const cb = el("input"); cb.type = "checkbox"; cb.checked = sec.show !== false;
+        cb.addEventListener("change", () => { sec.show = cb.checked; changed(true); });
+        lab.append(cb, document.createTextNode("Visible"));
+        row.append(lab);
+      } else {
+        row.append(el("span", "oname", "Custom sections"));
+        const n = (state.customSections || []).filter((c) => c && c.show !== false).length;
+        row.append(el("span", "badge", n + " visible"));
+      }
+      row.append(
+        tbtn(I.up, "Move up", i === 0, () => swap(order, i, i - 1)),
+        tbtn(I.down, "Move down", i === order.length - 1, () => swap(order, i, i + 1))
+      );
+      body.append(row);
+    });
+    const h = el("div", "hint");
+    h.style.marginTop = "10px";
+    h.textContent = "Sections with nothing in them are skipped automatically.";
+    body.append(h);
+  }
+
+  /* ---------------- preview, saving, status ---------------- */
+  let pushTimer;
+  function changed(structural) {
+    if (structural) build();
+    updateStatus();
+    clearTimeout(pushTimer);
+    pushTimer = setTimeout(() => { push(); persist(); }, 120);
+  }
+  function push() { if (frame.contentWindow) frame.contentWindow.postMessage({ type: "site-preview", site: state }, "*"); }
+  function persist() { const j = JSON.stringify(state); if (j === fileJson) store.del(KEYS.draft); else store.set(KEYS.draft, j); }
+  function updateStatus() {
+    const dirty = JSON.stringify(state) !== baseline;
+    const st = $("#status");
+    st.textContent = dirty ? "Unpublished changes — draft kept in this browser" : "Up to date";
+    st.classList.toggle("dirty", dirty);
+  }
+  function scrollPreview(key) {
+    const id = SECTION_KEYS.includes(key) ? key : key === "customSections" ? "custom" : "top";
+    if (frame.contentWindow) frame.contentWindow.postMessage({ type: "site-scroll", id }, "*");
+  }
+  window.addEventListener("message", (e) => {
+    if (e.source === frame.contentWindow && e.data && e.data.type === "site-ready") push();
+  });
+
+  function notice(msg, actionLabel, fn, isError) {
+    const n = $("#notice");
+    n.innerHTML = "";
+    n.classList.toggle("error", !!isError);
+    n.append(el("span", null, msg));
+    if (actionLabel) { const b = el("button", null, actionLabel); b.type = "button"; b.addEventListener("click", fn); n.append(b); }
+    const x = el("button", null, "Dismiss"); x.type = "button"; x.addEventListener("click", () => { n.hidden = true; });
+    n.append(x);
+    n.hidden = false;
+  }
+
+  let toastTimer;
+  function toast(msg, actionLabel, fn) {
+    const t = $("#toast");
+    t.innerHTML = "";
+    t.append(el("span", null, msg));
+    if (actionLabel) {
+      const b = el("button", null, actionLabel); b.type = "button";
+      b.addEventListener("click", () => { t.classList.remove("show"); fn(); });
+      t.append(b);
+    }
+    t.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove("show"), actionLabel ? 7000 : 3500);
+  }
+
+  /* ---------------- toolbar actions ---------------- */
+  function serialize() {
+    return "// All the content of your site lives in this file.\n" +
+      "// Easiest way to edit: open editor.html (visual editor with live preview).\n" +
+      "// You can also edit by hand — keep everything after \"window.SITE =\" valid JSON.\n" +
+      "window.SITE = " + JSON.stringify(state, null, 2) + ";\n";
+  }
+  function parseContent(text) {
+    const t = text.trim();
+    try { return JSON.parse(t); } catch (e) { /* not plain JSON — try content.js format */ }
+    const i = t.indexOf("{"), j = t.lastIndexOf("}");
+    if (i < 0 || j < i) throw new Error("No content found");
+    return JSON.parse(t.slice(i, j + 1));
+  }
+
+  function revert() {
+    state = clone(ORIGINAL);
+    baseline = fileJson;
+    normalize();
+    store.del(KEYS.draft); store.del(KEYS.published);
+    $("#notice").hidden = true;
+    build(); changed();
+    toast("Back to the content in content.js.");
+  }
+
+  $("#btnRevert").addEventListener("click", () => {
+    if (JSON.stringify(state) === fileJson) { toast("Nothing to revert."); return; }
+    if (confirm("Discard all your changes and go back to what's in content.js?")) revert();
+  });
+
+  $("#btnDownload").addEventListener("click", () => {
+    const blob = new Blob([serialize()], { type: "text/javascript" });
+    const url = URL.createObjectURL(blob);
+    const link = el("a"); link.href = url; link.download = "content.js";
+    document.body.append(link); link.click(); link.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    toast("Downloaded content.js — replace the old one in your repository to go live.");
+  });
+
+  $("#btnImport").addEventListener("click", () => $("#fileInput").click());
+  $("#fileInput").addEventListener("change", (e) => {
+    const f = e.target.files && e.target.files[0];
+    if (!f) return;
+    f.text().then((txt) => {
+      state = parseContent(txt);
+      normalize(); build(); changed();
+      toast("Imported " + f.name + ".");
+    }).catch(() => toast("That file doesn't look like a valid content.js.")).finally(() => { e.target.value = ""; });
+  });
+
+  document.querySelectorAll(".seg button").forEach((b) => b.addEventListener("click", () => {
+    document.querySelectorAll(".seg button").forEach((x) => x.classList.toggle("on", x === b));
+    frame.style.width = b.dataset.w;
+  }));
+
+  /* ---------------- publish to GitHub ---------------- */
+  const dlg = $("#pubDlg");
+  function guessRepo() {
+    const host = location.hostname;
+    if (!/\.github\.io$/i.test(host)) return {};
+    const owner = host.split(".")[0];
+    const seg = location.pathname.split("/").filter(Boolean)[0];
+    return { owner, repo: seg && !/\.html?$/i.test(seg) ? seg : host };
+  }
+  $("#btnPublish").addEventListener("click", () => {
+    let cfg = {};
+    try { cfg = JSON.parse(store.get(KEYS.gh) || "{}"); } catch (e) {}
+    const g = guessRepo();
+    $("#ghOwner").value = cfg.owner || g.owner || "";
+    $("#ghRepo").value = cfg.repo || g.repo || "";
+    $("#ghBranch").value = cfg.branch || "main";
+    $("#ghPath").value = cfg.path || "content.js";
+    const remembered = store.get(KEYS.token);
+    $("#ghToken").value = remembered || (session && store.get(KEYS.token, session)) || "";
+    $("#ghRemember").checked = !!remembered;
+    $("#pubResult").hidden = true;
+    dlg.showModal();
+  });
+  $("#pubCancel").addEventListener("click", () => dlg.close());
+
+  function b64(str) {
+    const bytes = new TextEncoder().encode(str);
+    let bin = "";
+    for (let i = 0; i < bytes.length; i += 0x8000) bin += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000));
+    return btoa(bin);
+  }
+  async function ghError(res) {
+    let m = "";
+    try { m = (await res.json()).message || ""; } catch (e) {}
+    if (res.status === 401) return "GitHub rejected the token (401). Check it's correct and not expired.";
+    if (res.status === 403) return "The token doesn't have permission (403). It needs Contents: Read and write on this repository.";
+    if (res.status === 404) return "Repository, branch or file not found (404) — or the token can't access this repository.";
+    if (res.status === 409 || res.status === 422) return "GitHub refused the update (" + res.status + "): " + m + ". Try publishing again.";
+    return "GitHub error " + res.status + (m ? ": " + m : "");
+  }
+
+  $("#pubForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const owner = $("#ghOwner").value.trim(), repo = $("#ghRepo").value.trim();
+    const branch = $("#ghBranch").value.trim() || "main", path = $("#ghPath").value.trim().replace(/^\/+/, "") || "content.js";
+    const token = $("#ghToken").value.trim(), message = $("#ghMsg").value.trim() || "Update site content";
+    const out = $("#pubResult"), go = $("#pubGo");
+    store.set(KEYS.gh, JSON.stringify({ owner, repo, branch, path }));
+    if ($("#ghRemember").checked) { store.set(KEYS.token, token); }
+    else { store.del(KEYS.token); if (session) store.set(KEYS.token, token, session); }
+
+    const api = "https://api.github.com/repos/" + encodeURIComponent(owner) + "/" + encodeURIComponent(repo) +
+      "/contents/" + path.split("/").map(encodeURIComponent).join("/");
+    const headers = { Accept: "application/vnd.github+json", Authorization: "Bearer " + token, "X-GitHub-Api-Version": "2022-11-28" };
+    go.disabled = true; go.textContent = "Publishing…";
+    out.hidden = false; out.className = "result"; out.textContent = "Talking to GitHub…";
+    try {
+      let sha;
+      const cur = await fetch(api + "?ref=" + encodeURIComponent(branch) + "&t=" + Date.now(), { headers, cache: "no-store" });
+      if (cur.ok) sha = (await cur.json()).sha;
+      else if (cur.status !== 404) throw new Error(await ghError(cur));
+      const body = { message, content: b64(serialize()), branch };
+      if (sha) body.sha = sha;
+      const res = await fetch(api, { method: "PUT", headers: Object.assign({ "Content-Type": "application/json" }, headers), body: JSON.stringify(body) });
+      if (!res.ok) throw new Error(await ghError(res));
+      const data = await res.json();
+      const snap = JSON.stringify(state);
+      store.set(KEYS.published, snap); store.set(KEYS.draft, snap);
+      baseline = snap; updateStatus();
+      out.className = "result ok"; out.innerHTML = "";
+      out.append(el("span", null, "Published! Your site will update in about a minute. "));
+      if (data.commit && data.commit.html_url) {
+        const l = el("a", null, "View commit ↗"); l.href = data.commit.html_url; l.target = "_blank"; l.rel = "noopener";
+        out.append(l);
+      }
+      toast("Published to GitHub.");
+    } catch (err) {
+      out.className = "result err";
+      out.textContent = err && err.message && !/Failed to fetch/i.test(err.message) ? err.message
+        : "Couldn't reach GitHub. Check your internet connection and try again.";
+    } finally {
+      go.disabled = false; go.textContent = "Publish";
+    }
+  });
+
+  /* ---------------- go ---------------- */
+  frame.addEventListener("load", push);
+  build();
+  updateStatus();
+  push();
+})();
+</script>
+</body>
+</html>
