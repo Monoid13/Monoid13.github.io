@@ -103,6 +103,11 @@ window.SITE = {
       {
         "name": "Part IA",
         "courses": "Groups, Numbers and Sets, Vectors and Matrices, Differential Equations, Analysis I, Probability, Vector Calculus, Dynamics and Relativity"
+      },
+      {
+        "name": "Definitions",
+        "key": "definitions",
+        "courses": "Groups, Numbers and Sets, Vectors and Matrices, Differential Equations, Analysis I, Probability, Vector Calculus, Dynamics and Relativity"
       }
     ],
     "notes": [
