@@ -1,6 +1,7 @@
 /* Site styles: water and gold. The accent (gold) colour comes from content.js. */
 :root {
-  --accent: #c9a227;                                       /* gold */
+  --accent: #c9a227;
+  --red: #c0392b;                                       /* gold */
   --link: color-mix(in srgb, var(--accent) 62%, #3a2a00);  /* darker gold, readable on light water */
   --gold-hi: #f1d27a;
   --water: #0f5a6b;
@@ -18,6 +19,7 @@
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     --link: color-mix(in srgb, var(--accent) 80%, #fff);
+    --red: #ff6b5e;
     --water: #5fb3c0;
     --bg: #08171f;
     --bg-tint: #0d2a36;
@@ -32,6 +34,7 @@
 }
 :root[data-theme="dark"] {
   --link: color-mix(in srgb, var(--accent) 80%, #fff);
+  --red: #ff6b5e;
   --water: #5fb3c0;
   --bg: #08171f;
   --bg-tint: #0d2a36;
@@ -158,7 +161,14 @@ details.note-fold[open] .note-title { border-bottom-color: var(--accent); }
 @keyframes note-in { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
 .note-fold .note-slot > .muted { padding: 0 24px 18px 46px; margin: 0; }
 .note-fold .note { margin: 0; padding: 4px 40px 30px 46px; border: 0; border-radius: 0 0 12px 12px; background: none; box-shadow: none; }
-.note-fold .note h4 { display: none; }                  /* the title is already in the summary */
+.note-fold .note h4 { display: none; }
+.note-close-row { display: flex; justify-content: center; padding: 0 24px 24px; }
+.note-close {
+  font: 500 14.5px Roboto, Arial, sans-serif; letter-spacing: .02em; color: var(--red); background: transparent;
+  border: 1.5px solid var(--red); border-radius: 999px; padding: 7px 20px; cursor: pointer; transition: background .2s, color .2s;
+}
+.note-close:hover { background: var(--red); color: var(--bg); }
+.note-close:focus-visible { outline: 2px solid var(--red); outline-offset: 3px; }                  /* the title is already in the summary */
 .note {
   position: relative; margin: 10px 0 6px; padding: 34px 40px 30px; border-radius: 12px;
   background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 5%, var(--card)), var(--card));

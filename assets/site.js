@@ -131,7 +131,8 @@
             var f = safeUrl(n.file);
             return '<details class="note-fold"><summary><span class="note-title">' + esc(n.title || "Notes") + "</span></summary>" +
               '<div class="note-slot"' + (f ? ' data-src="' + esc(f) + '"' : "") + ">" +
-              (f ? '<p class="muted">Loading…</p>' : '<div class="note"><div class="prose">' + md(n.text) + "</div></div>") + "</div></details>";
+              (f ? '<p class="muted">Loading…</p>' : '<div class="note"><div class="prose">' + md(n.text) + "</div></div>") + "</div>" +
+              '<div class="note-close-row"><button type="button" class="note-close">Close this note</button></div></details>';
           }).join("") : '<p class="muted">Nothing here yet.</p>';
           return '<details class="course"><summary>' + esc(c) +
             (mine.length ? '<span class="count">' + mine.length + (mine.length === 1 ? " note" : " notes") + "</span>" : "") +
@@ -414,6 +415,15 @@
     });
     Array.prototype.forEach.call(app.querySelectorAll("details.note-fold"), function (d) {
       d.addEventListener("toggle", function () { if (d.open) loadNotes(d); });
+    });
+    Array.prototype.forEach.call(app.querySelectorAll(".note-close"), function (b) {
+      b.addEventListener("click", function () {
+        var d = b.closest("details.note-fold"), sum = d.querySelector("summary");
+        d.open = false;
+        var top = sum.getBoundingClientRect().top;               // bring the closed note's title back into view
+        if (top < 70) window.scrollBy({ top: top - 80, behavior: reduced ? "auto" : "smooth" });
+        sum.focus({ preventScroll: true });
+      });
     });
     Array.prototype.forEach.call(app.querySelectorAll(".reveal-btn"), function (b) {
       b.addEventListener("click", function () {
