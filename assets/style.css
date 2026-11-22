@@ -13,7 +13,7 @@
   --soft: #eaf2f4;
   --card: #ffffff;
   --outline: rgba(0, 0, 0, .55);
-  --scene: url("bg-light.svg");
+  --scene: url("bg-light.jpg");
   --footer-bg: #0b1f2e;
   --footer-text: #d6e2e8;
   color-scheme: light;
@@ -31,7 +31,7 @@
     --soft: #10242f;
     --card: #0c1e28;
     --outline: rgba(255, 255, 255, .55);
-    --scene: url("bg-dark.svg");
+    --scene: url("bg-dark.jpg");
     --footer-bg: #050f15;
     color-scheme: dark;
   }
@@ -48,7 +48,7 @@
   --soft: #10242f;
   --card: #0c1e28;
   --outline: rgba(255, 255, 255, .55);
-  --scene: url("bg-dark.svg");
+  --scene: url("bg-dark.jpg");
   --footer-bg: #050f15;
   color-scheme: dark;
 }
