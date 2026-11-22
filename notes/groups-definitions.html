@@ -193,4 +193,36 @@ B, II: \(b^2=a^2\), \(ba=a^{-1}b\). Setting \(i=a\), \(j=b\), \(k=ab\), \(-1=a^2
 <p><span class="def-label">Summary.</span> Groups of order up to \(8\): \(1\); \(C_2\); \(C_3\); \(C_4,\ C_2\times C_2\); \(C_5\); \(C_6,\ D_6\); \(C_7\); \(C_8,\ C_4\times C_2,\ C_2\times C_2\times C_2,\ D_8,\ Q_8\).</p>
 </div></details>
 
+<details class="def"><summary>Normal subgroup</summary><div class="def-body">
+<p>\(H\le G\) is normal, written \(H\triangleleft G\), if \(ghg^{-1}\in H\) for all \(h\in H\) and \(g\in G\). Equivalently, \(gH=Hg\) for every \(g\in G\).</p>
+<p><span class="def-label">Abelian groups.</span> If \(G\) is abelian, every subgroup is normal, because \(ghg^{-1}=hgg^{-1}=h\in H\). (The converse fails: a normal subgroup need not be abelian, and a non-abelian group can have normal subgroups, e.g. \(\langle r\rangle\triangleleft D_{2n}\).)</p>
+<p><span class="def-label">Examples.</span> \(1\triangleleft G\) and \(G\triangleleft G\). \(\langle r\rangle\triangleleft D_{2n}\), since \(sr^ks^{-1}=r^{-k}\), but \(\langle s\rangle\) is not normal, since \(rsr^{-1}=sr^{-2}\notin\langle s\rangle\). Every subgroup of index \(2\) is normal.
+Kernels are normal: if \(\varphi(h)=e\), then \(\varphi(ghg^{-1})=\varphi(g)\varphi(g)^{-1}=e\).</p>
+<p><span class="def-label">Proof that \(H\triangleleft G\iff gH=Hg\).</span> (\(\Rightarrow\)) \(gh=(ghg^{-1})g\in Hg\), so \(gH\subseteq Hg\); and \(hg=g(g^{-1}hg)\in gH\), so \(Hg\subseteq gH\).
+(\(\Leftarrow\)) \(gh\in gH=Hg\), so \(gh=h'g\) for some \(h'\in H\), and \(ghg^{-1}=h'\in H\). \(\blacksquare\)</p>
+</div></details>
+
+<details class="def"><summary>Quotient group</summary><div class="def-body">
+<p>If \(H\triangleleft G\), the cosets \(G/H\) form a group under \((g_1H)(g_2H)=(g_1g_2)H\), called the quotient of \(G\) by \(H\). The identity is \(eH=H\) and \((gH)^{-1}=g^{-1}H\).</p>
+<p><span class="def-label">Well-defined.</span> If \(g_1H=g_1'H\) and \(g_2H=g_2'H\) (so also \(Hg_2=Hg_2'\), by normality), then \(g_1=g_1'h_1\) and \(g_2=h_2g_2'\) with \(h_1,h_2\in H\).
+So \(g_1g_2=g_1'(h_1h_2)g_2'\), and \((h_1h_2)g_2'\in Hg_2'=g_2'H\), say \(=g_2'h_3\). Hence \(g_1g_2=g_1'g_2'h_3\) and \((g_1g_2)H=(g_1'g_2')H\). Associativity is inherited from \(G\).</p>
+<p><span class="def-label">Examples.</span> \(G/1\cong G\), \(G/G\cong1\), \(\mathbb Z/n\mathbb Z\cong C_n\), \(D_{2n}/\langle r\rangle\cong C_2\).
+Quotients do not undo direct products: \(C_4/C_2\cong C_2\) and \(K_4/C_2\cong C_2\), but \(C_4\not\cong K_4\).</p>
+</div></details>
+
+<details class="def"><summary>Isomorphism theorem</summary><div class="def-body">
+<p>If \(\varphi:G\to H\) is a homomorphism, then \(G/\ker\varphi\cong\operatorname{im}\varphi\).</p>
+<p><span class="def-label">Proof.</span> \(\ker\varphi\triangleleft G\), so \(G/\ker\varphi\) is a group. Define \(\bar\varphi(g\ker\varphi)=\varphi(g)\).
+Well-defined: if \(g_1\ker\varphi=g_2\ker\varphi\), then \(g_1=g_2k\) with \(k\in\ker\varphi\), so \(\varphi(g_1)=\varphi(g_2)\varphi(k)=\varphi(g_2)\).
+Homomorphism: \(\bar\varphi\big((g_1g_2)\ker\varphi\big)=\varphi(g_1)\varphi(g_2)\).
+Injective: \(\bar\varphi(g\ker\varphi)=e\) means \(g\in\ker\varphi\), so \(g\ker\varphi\) is the identity coset.
+Surjective: every \(\varphi(g)\in\operatorname{im}\varphi\) is \(\bar\varphi(g\ker\varphi)\). \(\blacksquare\)</p>
+<p><span class="def-label">Examples.</span> \(k\mapsto e^{2\pi ik/n}\) gives \(\mathbb Z/n\mathbb Z\cong C_n\). \(t\mapsto e^{2\pi it}\) gives \(\mathbb R/\mathbb Z\cong U(1)=\{z:|z|=1\}\).</p>
+</div></details>
+
+<details class="def"><summary>Simple group</summary><div class="def-body">
+<p>\(G\) is simple if its only normal subgroups are \(1\) and \(G\). Then every homomorphism \(\varphi:G\to H\) is trivial or injective, since \(\ker\varphi\triangleleft G\) is \(G\) or \(1\).</p>
+<p><span class="def-label">Example.</span> \(C_p\) is simple for \(p\) prime: by Lagrange its only subgroups have order \(1\) or \(p\).</p>
+</div></details>
+
 </div>
