@@ -132,13 +132,17 @@
           });
           var body = mine.length ? mine.map(function (n) {
             var f = safeUrl(n.file);
+            if (n.inline && f) {                              // shown as soon as the course opens (e.g. a definitions list)
+              return '<div class="note-slot inline-slot" data-src="' + esc(f) + '"><p class="muted">Loading…</p></div>';
+            }
             return '<details class="note-fold"><summary><span class="note-title">' + esc(n.title || "Notes") + "</span></summary>" +
               '<div class="note-slot"' + (f ? ' data-src="' + esc(f) + '"' : "") + ">" +
               (f ? '<p class="muted">Loading…</p>' : '<div class="note"><div class="prose">' + md(n.text) + "</div></div>") + "</div>" +
               '<div class="note-close-row"><button type="button" class="note-close">Close this note</button></div></details>';
           }).join("") : '<p class="muted">Nothing here yet.</p>';
           return '<details class="course"><summary>' + esc(c) +
-            (mine.length ? '<span class="count">' + mine.length + (mine.length === 1 ? " note" : " notes") + "</span>" : "") +
+            (mine.length ? '<span class="count">' + esc(mine.length === 1 && mine[0].countLabel ? mine[0].countLabel
+              : mine.length + (mine.length === 1 ? " note" : " notes")) + "</span>" : "") +
             '</summary><div class="course-body">' + body + "</div></details>";
         }).join("") + "</div>";
       }).join("");
@@ -357,7 +361,8 @@
     });
   }
   function loadNotes(d) {
-    Array.prototype.forEach.call(d.querySelectorAll(".note-slot"), function (slot) {
+    var slots = d.classList.contains("note-slot") ? [d] : d.querySelectorAll(".note-slot");
+    Array.prototype.forEach.call(slots, function (slot) {
       if (slot.getAttribute("data-done")) return;
       slot.setAttribute("data-done", "1");
       var src = slot.getAttribute("data-src");
@@ -418,6 +423,12 @@
     });
     Array.prototype.forEach.call(app.querySelectorAll("details.note-fold"), function (d) {
       d.addEventListener("toggle", function () { if (d.open) loadNotes(d); });
+    });
+    Array.prototype.forEach.call(app.querySelectorAll("details.course"), function (d) {
+      if (!d.querySelector(".inline-slot")) return;
+      d.addEventListener("toggle", function () {
+        if (d.open) Array.prototype.forEach.call(d.querySelectorAll(".inline-slot"), loadNotes);
+      });
     });
     Array.prototype.forEach.call(app.querySelectorAll(".note-close"), function (b) {
       b.addEventListener("click", function () {

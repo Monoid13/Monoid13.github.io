@@ -113,6 +113,14 @@ window.SITE = {
     "notes": [
       {
         "course": "Groups",
+        "part": "definitions",
+        "title": "Definitions",
+        "file": "notes/groups-definitions.html",
+        "inline": true,
+        "countLabel": "19 definitions"
+      },
+      {
+        "course": "Groups",
         "title": "Orbits are disjoint",
         "file": "notes/orbits-disjoint.html"
       },
