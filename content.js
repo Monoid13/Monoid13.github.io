@@ -43,7 +43,7 @@ window.SITE = {
       "sections": "experience, projects"
     },
     {
-      "title": "Tripos",
+      "title": "IA",
       "intro": "",
       "sections": "tripos"
     },
