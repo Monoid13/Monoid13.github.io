@@ -43,6 +43,11 @@ window.SITE = {
       "sections": "experience, projects"
     },
     {
+      "title": "Tripos",
+      "intro": "",
+      "sections": "tripos"
+    },
+    {
       "title": "Other",
       "intro": "Competitions, education, skills and a puzzle.",
       "sections": "custom, education, skills, puzzles"
@@ -50,6 +55,7 @@ window.SITE = {
   ],
   "sectionOrder": [
     "highlights",
+    "tripos",
     "about",
     "experience",
     "projects",
@@ -88,6 +94,24 @@ window.SITE = {
     "title": "About",
     "text": "Hi! I'm Joe (Junhan) Wu, a first-year Mathematics student at King's College, University of Cambridge. I'm interested in probability, game theory and quantitative trading.\n\nThis term I took part in Optiver's Cambridge vs Oxford Trading Academy, where my team finished 7th of 62, and I won a Blotto tournament at a Wintermute industry workshop.",
     "more": "Away from maths, I play poker with the Cambridge Poker Society and table tennis for King's, and I enjoy cycling and running. I also play the violin, and have ABRSM Grade 8."
+  },
+  "tripos": {
+    "show": true,
+    "title": "Tripos Resources",
+    "intro": "Notes and proofs from the Cambridge Mathematical Tripos. Click a course to open it.",
+    "parts": [
+      {
+        "name": "Part IA",
+        "courses": "Groups, Numbers and Sets, Vectors and Matrices, Differential Equations, Analysis I, Probability, Vector Calculus, Dynamics and Relativity"
+      }
+    ],
+    "notes": [
+      {
+        "course": "Vector Calculus",
+        "title": "Laplace (cofactor) expansion of the determinant",
+        "file": "notes/laplace-expansion.html"
+      }
+    ]
   },
   "news": {
     "show": true,

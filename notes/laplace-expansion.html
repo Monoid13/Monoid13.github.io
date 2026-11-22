@@ -1,0 +1,49 @@
+<article class="note">
+<h4>Laplace (cofactor) expansion of the determinant</h4>
+
+<p><strong>Notation.</strong> Let \(M\) be an \(n\times n\) matrix with columns \(C_1,\dots,C_n\), and let \(e_1,\dots,e_n\) be the standard basis vectors.
+The <em>minor matrix</em> \(M^{ij}\) is the \((n-1)\times(n-1)\) matrix obtained from \(M\) by removing row \(i\) and column \(j\).
+The <em>cofactor</em> of \(M_{ij}\) is \(\Delta_{ij}=(-1)^{i+j}\det M^{ij}\).</p>
+
+<p><strong>Claim.</strong> For every fixed column \(j\),
+$$\det M=\sum_{i=1}^{n} M_{ij}\,\Delta_{ij}=\sum_{i=1}^{n} (-1)^{i+j}M_{ij}\det M^{ij}.$$</p>
+
+<p><strong>Step 1: decompose column \(j\).</strong> Write the \(j\)-th column in the standard basis:
+$$C_j=\begin{pmatrix}M_{1j}\\ M_{2j}\\ \vdots\\ M_{nj}\end{pmatrix}=\sum_{i=1}^{n} M_{ij}\,e_i .$$
+The determinant is linear in each column, so
+$$\det M=\sum_{i=1}^{n} M_{ij}\,\det\big[C_1,\dots,C_{j-1},\,e_i,\,C_{j+1},\dots,C_n\big].$$</p>
+
+<p><strong>Step 2: clear row \(i\).</strong> In the \(i\)-th term, column \(j\) is \(e_i\). For every \(k\neq j\), subtract \(M_{ik}\) times this column from column \(k\).
+Adding a multiple of one column to another does not change the determinant, so
+$$\det M=\sum_{i=1}^{n} M_{ij}\,\det\big[C_1-M_{i1}e_i,\ \dots,\ C_{j-1}-M_{i,j-1}e_i,\ e_i,\ C_{j+1}-M_{i,j+1}e_i,\ \dots,\ C_n-M_{in}e_i\big].$$
+Call this matrix \(N^{(i)}\). Its row \(i\) is zero except for a \(1\) in column \(j\), its column \(j\) is \(e_i\),
+and since \(e_i\) is non-zero only in row \(i\), every other entry is unchanged. So deleting row \(i\) and column \(j\) from \(N^{(i)}\) leaves exactly \(M^{ij}\).</p>
+
+<p><strong>Step 3: move the \(1\) to the top-left corner.</strong> Move row \(i\) to the top with \(i-1\) swaps of adjacent rows, and column \(j\) to the left with \(j-1\) swaps of adjacent columns.
+The other rows and columns keep their order, and each swap changes the sign of the determinant. There are \((i-1)+(j-1)=i+j-2\) swaps, so
+$$\det N^{(i)}=(-1)^{i+j}\det\begin{pmatrix}1&0\\0&M^{ij}\end{pmatrix}.$$</p>
+
+<p><strong>Step 4: the block determinant.</strong> Let \(B=\begin{pmatrix}1&0\\0&A\end{pmatrix}\) with \(A\) of size \((n-1)\times(n-1)\). By the Leibniz formula,
+$$\det B=\sum_{\rho\in S_n}\operatorname{sgn}(\rho)\prod_{k=1}^{n}B_{k\,\rho(k)} .$$
+The only non-zero entry in row \(1\) is \(B_{11}=1\), so only permutations with \(\rho(1)=1\) contribute.
+These are exactly the permutations of \(\{2,\dots,n\}\), which correspond to permutations \(\sigma\in S_{n-1}\) with the same sign (they have the same cycles). Therefore
+$$\det B=\sum_{\sigma\in S_{n-1}}\operatorname{sgn}(\sigma)\prod_{k=1}^{n-1}A_{k\,\sigma(k)}=\det A .$$</p>
+
+<p><strong>Conclusion.</strong> Putting the steps together,
+$$\det M=\sum_{i=1}^{n} M_{ij}\,(-1)^{i+j}\det M^{ij}=\sum_{i=1}^{n} M_{ij}\,\Delta_{ij}. \qquad\blacksquare$$
+Since \(\det M=\det M^{\mathsf T}\), the same expansion holds along any row.</p>
+
+<p><strong>Example.</strong> Expand along column \(j=2\):
+$$\det\begin{pmatrix}3&4&5\\1&2&3\\7&8&9\end{pmatrix}
+=4\begin{vmatrix}3&1&5\\1&0&3\\7&0&9\end{vmatrix}
++2\begin{vmatrix}3&0&5\\1&1&3\\7&0&9\end{vmatrix}
++8\begin{vmatrix}3&0&5\\1&0&3\\7&1&9\end{vmatrix}\quad\text{(Step 1)}$$
+$$=4\begin{vmatrix}0&1&0\\1&0&3\\7&0&9\end{vmatrix}
++2\begin{vmatrix}3&0&5\\0&1&0\\7&0&9\end{vmatrix}
++8\begin{vmatrix}3&0&5\\1&0&3\\0&1&0\end{vmatrix}\quad\text{(Step 2)}$$
+$$=4\,(-1)^{1+2}\begin{vmatrix}1&3\\7&9\end{vmatrix}
++2\,(-1)^{2+2}\begin{vmatrix}3&5\\7&9\end{vmatrix}
++8\,(-1)^{3+2}\begin{vmatrix}3&5\\1&3\end{vmatrix}
+=48-16-32=0 .$$
+This agrees with expanding along the first row: \(3(18-24)-4(9-21)+5(8-14)=-18+48-30=0\).</p>
+</article>
