@@ -5,7 +5,7 @@ Personal website for Joe Wu, served by GitHub Pages from `main`.
 ## Layout
 - `content.js`: all text and settings (JSON after `window.SITE =`). `editor.html` edits it visually.
 - `assets/site.js` renders the pages; `assets/style.css` holds the water-and-gold theme (gold accent `#c9a227`, dark mode by default).
-- `notes/*.html`: Tripos notes, listed under `tripos.notes` in `content.js` with `course`, `title` and `file`.
+- `notes/*.html`: Tripos notes, listed under `tripos.notes` in `content.js` with `course`, `title` and `file`. Add `"part": "definitions"` to show a note under the Definitions list instead of Part IA.
 
 ## Every change
 - Bump the `?v=N` number on the three asset links in `index.html`, or browsers keep showing cached files.

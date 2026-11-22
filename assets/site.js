@@ -126,7 +126,10 @@
       if (!parts.length) return "";
       return (sec.intro ? '<p class="desc">' + inline(sec.intro) + "</p>" : "") + parts.map(function (p) {
         return (p.name ? "<h3 class=\"part\">" + esc(p.name) + "</h3>" : "") + '<div class="courses">' + list(p.courses).map(function (c) {
-          var mine = notes.filter(function (n) { return String(n.course || "").trim().toLowerCase() === c.toLowerCase(); });
+          var mine = notes.filter(function (n) {
+            return String(n.course || "").trim().toLowerCase() === c.toLowerCase() &&
+              String(n.part || "").trim().toLowerCase() === String(p.key || "").trim().toLowerCase();   // a note's "part" picks the list it appears in
+          });
           var body = mine.length ? mine.map(function (n) {
             var f = safeUrl(n.file);
             return '<details class="note-fold"><summary><span class="note-title">' + esc(n.title || "Notes") + "</span></summary>" +
