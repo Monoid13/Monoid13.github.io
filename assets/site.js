@@ -129,8 +129,9 @@
           var mine = notes.filter(function (n) { return String(n.course || "").trim().toLowerCase() === c.toLowerCase(); });
           var body = mine.length ? mine.map(function (n) {
             var f = safeUrl(n.file);
-            return '<div class="note-slot"' + (f ? ' data-src="' + esc(f) + '"' : "") + ">" +
-              (f ? '<p class="muted">Loading ' + esc(n.title || "notes") + "…</p>" : '<div class="prose">' + md(n.text) + "</div>") + "</div>";
+            return '<details class="note-fold"><summary><span class="note-title">' + esc(n.title || "Notes") + "</span></summary>" +
+              '<div class="note-slot"' + (f ? ' data-src="' + esc(f) + '"' : "") + ">" +
+              (f ? '<p class="muted">Loading…</p>' : '<div class="note"><div class="prose">' + md(n.text) + "</div></div>") + "</div></details>";
           }).join("") : '<p class="muted">Nothing here yet.</p>';
           return '<details class="course"><summary>' + esc(c) +
             (mine.length ? '<span class="count">' + mine.length + (mine.length === 1 ? " note" : " notes") + "</span>" : "") +
@@ -411,7 +412,7 @@
       if (!isPreview) { try { localStorage.setItem(THEME_KEY, next); } catch (e) {} }
       btn.innerHTML = themeIcon();
     });
-    Array.prototype.forEach.call(app.querySelectorAll("details.course"), function (d) {
+    Array.prototype.forEach.call(app.querySelectorAll("details.note-fold"), function (d) {
       d.addEventListener("toggle", function () { if (d.open) loadNotes(d); });
     });
     Array.prototype.forEach.call(app.querySelectorAll(".reveal-btn"), function (b) {
