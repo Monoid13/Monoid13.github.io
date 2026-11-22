@@ -108,6 +108,11 @@ window.SITE = {
     "notes": [
       {
         "course": "Groups",
+        "title": "Orbits are disjoint",
+        "file": "notes/orbits-disjoint.html"
+      },
+      {
+        "course": "Groups",
         "title": "Burnside's lemma",
         "file": "notes/burnside.html"
       },
