@@ -275,8 +275,8 @@ window.SITE = {
     "intro": "A few favourite probability puzzles. Have a go before you reveal the answers.",
     "items": [
       {
-        "question": "You roll a fair six-sided die until you roll a 6. Given that **every roll was even**, what is the expected number of rolls?",
-        "answer": "**3/2**, not 3 as most people first guess.\n\nConditioning on \"all rolls were even\" is the same as stopping at the first roll that is a 1, 3, 5 or 6, and keeping only the runs that stop on a 6. Each roll ends the run with probability 4/6 = 2/3, and which of those four numbers ends it is independent of how long the run was. So the number of rolls is geometric with p = 2/3, with mean 3/2."
+        "question": "You roll a die whose faces are **2, 2, 4, 4, 6, 6** until you roll a 6. What is the expected number of rolls?",
+        "answer": "**3.**\n\nEvery roll shows 2, 4 or 6, each with probability 1/3, so each roll is a 6 with probability 1/3, independently of the others. The number of rolls is geometric with p = 1/3, so its mean is 1/p = 3.\n\nCompare this with an ordinary die where you are only told afterwards that every roll was even: there the answer is 3/2, because that condition rules out long runs far more often than short ones."
       },
       {
         "question": "You flip a fair coin until you get **two heads in a row**. What is the expected number of flips?",
