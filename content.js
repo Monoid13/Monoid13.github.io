@@ -108,16 +108,6 @@ window.SITE = {
     "notes": [
       {
         "course": "Groups",
-        "title": "Cosets and Lagrange's theorem",
-        "file": "notes/cosets-lagrange.html"
-      },
-      {
-        "course": "Groups",
-        "title": "Group actions",
-        "file": "notes/group-actions.html"
-      },
-      {
-        "course": "Groups",
         "title": "Burnside's lemma",
         "file": "notes/burnside.html"
       },
