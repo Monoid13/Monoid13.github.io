@@ -112,7 +112,7 @@ window.SITE = {
         "file": "notes/cosets-lagrange.html"
       },
       {
-        "course": "Vector Calculus",
+        "course": "Vectors and Matrices",
         "title": "Laplace (cofactor) expansion of the determinant",
         "file": "notes/laplace-expansion.html"
       }
