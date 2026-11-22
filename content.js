@@ -126,6 +126,11 @@ window.SITE = {
       },
       {
         "course": "Groups",
+        "title": "Cauchy's theorem",
+        "file": "notes/cauchy.html"
+      },
+      {
+        "course": "Groups",
         "title": "Burnside's lemma",
         "file": "notes/burnside.html"
       },
