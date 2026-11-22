@@ -55,6 +55,12 @@ The left cosets partition \(G\), and \(h\mapsto gh\) is a bijection \(H\to gH\),
 
 <details class="def"><summary>Cauchy's theorem</summary><div class="def-body">
 <p>If \(|G|<\infty\) and \(p\) is a prime dividing \(|G|\), then \(G\) has an element of order \(p\).</p>
+<p><span class="def-label">Why it matters.</span> Lagrange says the order of every element divides \(|G|\), but the converse fails in general: \(|A_4|=12\), yet \(A_4\) has no element of order \(6\). Cauchy says the converse holds for primes. For example, \(D_{10}\) has an element of order \(2\) (a reflection) and one of order \(5\) (a rotation).</p>
+<p><span class="def-label">1. Build a set.</span> Let \(X=\{(g_1,\dots,g_p): g_1g_2\cdots g_p=e\}\). Choosing \(g_1,\dots,g_{p-1}\) freely forces \(g_p=(g_1\cdots g_{p-1})^{-1}\), so \(|X|=|G|^{p-1}\), which is divisible by \(p\).</p>
+<p><span class="def-label">2. Let \(C_p\) rotate the tuples.</span> \(t^k(g_1,\dots,g_p)=(g_{k+1},\dots,g_p,g_1,\dots,g_k)\). This stays in \(X\): with \(a=g_1\cdots g_k\), \(b=g_{k+1}\cdots g_p\), \(ab=e\) gives \(b=a^{-1}\), so \(ba=e\).</p>
+<p><span class="def-label">3. Orbits have size \(1\) or \(p\).</span> By orbit–stabiliser each orbit's size divides \(|C_p|=p\), which is prime.</p>
+<p><span class="def-label">4. Count.</span> If \(\ell\) orbits have size \(1\) and \(m\) have size \(p\), then \(|G|^{p-1}=\ell+pm\). The left side is divisible by \(p\), so \(p\mid\ell\).</p>
+<p><span class="def-label">5. Find the element.</span> A size-\(1\) orbit is a constant tuple \((g,\dots,g)\) with \(g^p=e\). \((e,\dots,e)\) is one, so \(\ell\ge1\), and \(p\mid\ell\) gives \(\ell\ge p\ge2\). So some \(g\neq e\) has \(g^p=e\), hence \(o(g)=p\). \(\blacksquare\)</p>
 </div></details>
 
 <details class="def"><summary>Conjugation</summary><div class="def-body">
