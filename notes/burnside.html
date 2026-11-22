@@ -1,0 +1,26 @@
+<article class="note">
+<h4>Burnside's lemma</h4>
+
+<p><strong>Setting.</strong> Let a finite group \(G\) act on a finite set \(X\). Write \(\mathcal O\) for the set of orbits, and for \(g\in G\) let
+\(\operatorname{Fix}(g)=\{x\in X : gx=x\}\) be the set of points fixed by \(g\).</p>
+
+<p><strong>Lemma (Burnside).</strong> The number of orbits is the average number of fixed points:
+$$|\mathcal O|=\frac{1}{|G|}\sum_{g\in G}|\operatorname{Fix}(g)| .$$</p>
+
+<p><strong>Step 1: count fixed pairs two ways.</strong> Let \(S=\{(g,x)\in G\times X : gx=x\}\). Counting by \(g\) first, then by \(x\) first,
+$$|S|=\sum_{g\in G}|\operatorname{Fix}(g)|=\sum_{x\in X}|\operatorname{Stab}_G(x)| .$$</p>
+
+<p><strong>Step 2: use orbit–stabiliser.</strong> By Corollary 4.10, \(|G|=|Gx|\,|\operatorname{Stab}_G(x)|\), so \(|\operatorname{Stab}_G(x)|=\dfrac{|G|}{|Gx|}\) and
+$$\sum_{g\in G}|\operatorname{Fix}(g)|=\sum_{x\in X}\frac{|G|}{|Gx|} .$$</p>
+
+<p><strong>Step 3: sum orbit by orbit.</strong> The orbits partition \(X\), so the sum splits into one sum per orbit. For every \(x\in O\), the orbit of \(x\) is \(O\) itself, so \(|Gx|=|O|\). Therefore
+$$\sum_{x\in X}\frac{|G|}{|Gx|}=\sum_{O\in\mathcal O}\sum_{x\in O}\frac{|G|}{|O|}=\sum_{O\in\mathcal O}|O|\,\frac{|G|}{|O|}=\sum_{O\in\mathcal O}|G|=|G|\,|\mathcal O| .$$</p>
+
+<p><strong>Conclusion.</strong> Combining the steps, \(\sum_{g\in G}|\operatorname{Fix}(g)|=|G|\,|\mathcal O|\). Dividing by \(|G|\) gives
+$$|\mathcal O|=\frac{1}{|G|}\sum_{g\in G}|\operatorname{Fix}(g)|. \qquad\blacksquare$$</p>
+
+<p><strong>Example.</strong> How many ways are there to colour the 4 corners of a square black or white, counting colourings that differ by a rotation as the same?
+Here \(G=C_4\) (rotations by \(0^\circ,90^\circ,180^\circ,270^\circ\)) acts on the \(2^4=16\) colourings, and we want the number of orbits.
+The identity fixes all \(16\). Rotation by \(90^\circ\) or \(270^\circ\) fixes only the \(2\) one-colour squares. Rotation by \(180^\circ\) fixes a colouring exactly when opposite corners match, giving \(2^2=4\). So
+$$|\mathcal O|=\frac{16+2+4+2}{4}=6 .$$</p>
+</article>

@@ -117,6 +117,11 @@ window.SITE = {
         "file": "notes/group-actions.html"
       },
       {
+        "course": "Groups",
+        "title": "Burnside's lemma",
+        "file": "notes/burnside.html"
+      },
+      {
         "course": "Vectors and Matrices",
         "title": "Laplace (cofactor) expansion of the determinant",
         "file": "notes/laplace-expansion.html"
