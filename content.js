@@ -38,19 +38,9 @@ window.SITE = {
       "sections": "about, news"
     },
     {
-      "title": "Experience",
-      "intro": "Trading programmes, work experience and projects.",
-      "sections": "experience, projects"
-    },
-    {
       "title": "IA",
       "intro": "",
       "sections": "tripos"
-    },
-    {
-      "title": "Other",
-      "intro": "Competitions, education, skills and a puzzle.",
-      "sections": "custom, education, skills, puzzles"
     }
   ],
   "sectionOrder": [
