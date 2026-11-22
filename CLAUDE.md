@@ -5,7 +5,7 @@ Personal website for Joe Wu, served by GitHub Pages from `main`.
 ## Layout
 - `content.js`: all text and settings (JSON after `window.SITE =`). `editor.html` edits it visually.
 - `assets/site.js` renders the pages; `assets/style.css` holds the water-and-gold theme (gold accent `#c9a227`, dark mode by default).
-- Background: `assets/bg-light.jpg` (daytime) and `assets/bg-dark.jpg` (sunset), golden Chinese buildings over water, fixed behind the page. Content sits on a panel (`main.wrap`) with a thin white (dark) or black (light) outline. The site name appears only on the home page.
+- Background: `assets/bg-dark.svg` and `assets/bg-light.svg` (golden sky, Chinese skyline, gold water), fixed behind the page. Content sits on a panel (`main.wrap`) with a thin white (dark) or black (light) outline. The site name appears only on the home page.
 - `notes/*.html`: Tripos notes, listed under `tripos.notes` in `content.js` with `course`, `title` and `file`. Add `"part": "definitions"` to show a note under the Definitions list instead of Part IA.
 - Definitions lists (e.g. `notes/groups-definitions.html`) are `<div class="defs">` of `<details class="def"><summary>Name</summary><div class="def-body"><p>…</p></div></details>`, registered with `"inline": true` and a `"countLabel"` such as `"19 definitions"`.
 
