@@ -19,8 +19,24 @@ $$\sum_{x\in X}\frac{|G|}{|Gx|}=\sum_{O\in\mathcal O}\sum_{x\in O}\frac{|G|}{|O|
 <p><strong>Conclusion.</strong> Combining the steps, \(\sum_{g\in G}|\operatorname{Fix}(g)|=|G|\,|\mathcal O|\). Dividing by \(|G|\) gives
 $$|\mathcal O|=\frac{1}{|G|}\sum_{g\in G}|\operatorname{Fix}(g)|. \qquad\blacksquare$$</p>
 
-<p><strong>Example.</strong> How many ways are there to colour the 4 corners of a square black or white, counting colourings that differ by a rotation as the same?
-Here \(G=C_4\) (rotations by \(0^\circ,90^\circ,180^\circ,270^\circ\)) acts on the \(2^4=16\) colourings, and we want the number of orbits.
-The identity fixes all \(16\). Rotation by \(90^\circ\) or \(270^\circ\) fixes only the \(2\) one-colour squares. Rotation by \(180^\circ\) fixes a colouring exactly when opposite corners match, giving \(2^2=4\). So
-$$|\mathcal O|=\frac{16+2+4+2}{4}=6 .$$</p>
+<p><strong>Example: colouring a die.</strong> Each of the 6 faces of a cube is painted one of 3 colours (colours may repeat). Two colourings count as the same if one can be rotated into the other. How many different dice are there?</p>
+
+<p><strong>The action.</strong> The rotation group \(G\) of the cube has \(|G|=24\) and acts on the \(3^6=729\) colourings. Different dice are exactly the orbits, so by Burnside's lemma we need \(|\operatorname{Fix}(g)|\) for each rotation \(g\).</p>
+
+<p><strong>Fixed colourings.</strong> A rotation fixes a colouring exactly when each cycle of faces it permutes is a single colour. So a rotation with \(c\) face-cycles fixes \(3^{c}\) colourings.</p>
+<div class="table-wrap"><table class="note-table">
+  <thead><tr><th>Rotation</th><th>How many</th><th>Face cycles</th><th>Fixed colourings</th><th>Subtotal</th></tr></thead>
+  <tbody>
+    <tr><td>Identity</td><td>1</td><td>6</td><td>\(3^6=729\)</td><td>729</td></tr>
+    <tr><td>\(90^\circ/270^\circ\) about a face axis</td><td>6</td><td>3 (two fixed faces, one 4-cycle)</td><td>\(3^3=27\)</td><td>162</td></tr>
+    <tr><td>\(180^\circ\) about a face axis</td><td>3</td><td>4 (two fixed faces, two 2-cycles)</td><td>\(3^4=81\)</td><td>243</td></tr>
+    <tr><td>\(120^\circ/240^\circ\) about a vertex axis</td><td>8</td><td>2 (two 3-cycles)</td><td>\(3^2=9\)</td><td>72</td></tr>
+    <tr><td>\(180^\circ\) about an edge axis</td><td>6</td><td>3 (three 2-cycles)</td><td>\(3^3=27\)</td><td>162</td></tr>
+  </tbody>
+  <tfoot><tr><td>Total</td><td>24</td><td></td><td></td><td>1368</td></tr></tfoot>
+</table></div>
+
+<p><strong>Answer.</strong> Dividing by the size of the group,
+$$|\mathcal O|=\frac{1368}{24}=57,$$
+so there are \(57\) different dice.</p>
 </article>
