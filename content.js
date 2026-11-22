@@ -107,6 +107,11 @@ window.SITE = {
     ],
     "notes": [
       {
+        "course": "Groups",
+        "title": "Cosets and Lagrange's theorem",
+        "file": "notes/cosets-lagrange.html"
+      },
+      {
         "course": "Vector Calculus",
         "title": "Laplace (cofactor) expansion of the determinant",
         "file": "notes/laplace-expansion.html"

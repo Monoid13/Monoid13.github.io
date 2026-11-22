@@ -158,6 +158,9 @@ details.course > summary:focus-visible { outline: 2px solid var(--link); outline
 }
 .note h4 + p > strong:first-child { margin-top: 0; }
 .note em { color: var(--text); font-style: italic; }
+.note p.proof { padding-left: 16px; border-left: 2px solid var(--border); color: color-mix(in srgb, var(--text) 92%, var(--muted)); }
+.note p.proof > em:first-child { color: var(--water); font-style: italic; margin-right: 4px; }
+.note ol { margin: -8px 0 16px; padding-left: 26px; }
 .note .katex-display {
   overflow-x: auto; overflow-y: hidden; margin: 12px 0; padding: 12px 14px; border-radius: 8px;
   background: color-mix(in srgb, var(--water) 9%, transparent);
