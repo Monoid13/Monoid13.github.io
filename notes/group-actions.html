@@ -1,0 +1,28 @@
+<article class="note">
+<h4>Group actions</h4>
+
+<p><strong>Definition 4.1 (Group action).</strong> An action of a group \(G\) on a set \(X\), written \(G\curvearrowright X\), is a map \(G\times X\to X\), \((g,x)\mapsto gx\), such that</p>
+<ol>
+  <li>\(e\,x=x\) for all \(x\in X\), and</li>
+  <li>\((g_1g_2)x=g_1(g_2x)\) for all \(g_1,g_2\in G\), \(x\in X\).</li>
+</ol>
+
+<p><strong>Example 4.2.</strong> The trivial action \(gx=x\). \(\operatorname{Sym}(X)\curvearrowright X\) by \(fx=f(x)\). If \(G\curvearrowright X\) and \(H\le G\), then \(H\curvearrowright X\) by restriction (for example \(\operatorname{Isom}(\mathbb C)\curvearrowright\mathbb C\)).
+\(D_{2n}\) acts on the regular \(n\)-gon and on its vertices. Every group acts on itself by left multiplication, \(g\gamma=g\cdot\gamma\): the <em>left regular action</em>.</p>
+
+<p><strong>Theorem 4.3.</strong> An action of \(G\) on \(X\) is the same as a homomorphism \(\varphi:G\to\operatorname{Sym}(X)\).</p>
+<p class="proof"><em>Proof.</em> <span class="step">(\(\Rightarrow\))</span> Given \(G\curvearrowright X\), let \(t_g:X\to X\), \(x\mapsto gx\). Then \(t_{g^{-1}}(t_g(x))=g^{-1}(gx)=(g^{-1}g)x=x\), so \(t_{g^{-1}}\circ t_g=\mathrm{id}_X\), and similarly \(t_g\circ t_{g^{-1}}=\mathrm{id}_X\). So \(t_g\in\operatorname{Sym}(X)\), and we set \(\varphi(g)=t_g\).
+Since \(t_g\circ t_h(x)=g(hx)=(gh)x=t_{gh}(x)\), we get \(\varphi(gh)=\varphi(g)\circ\varphi(h)\), so \(\varphi\) is a homomorphism.<span class="gap"></span><span class="step">(\(\Leftarrow\))</span> Given a homomorphism \(\varphi\), define \(gx=\varphi(g)(x)\). Then \(ex=\varphi(e)(x)=\mathrm{id}_X(x)=x\), and
+\((g_1g_2)x=\varphi(g_1g_2)(x)=\varphi(g_1)\big(\varphi(g_2)(x)\big)=g_1(g_2x)\). So this is an action. \(\blacksquare\)</p>
+
+<p><strong>Theorem 4.4 (Cayley's theorem).</strong> Every group \(G\) is isomorphic to a subgroup of some \(\operatorname{Sym}(X)\). If \(|G|<\infty\), we can choose \(X\) with \(|X|<\infty\).</p>
+<p class="proof"><em>Proof.</em> Let \(X=G\) with the left regular action, and let \(\varphi:G\to\operatorname{Sym}(X)\) be the homomorphism from Theorem 4.3. Put \(H=\operatorname{im}\varphi\le\operatorname{Sym}(X)\), so \(\varphi:G\to H\) is surjective.
+If \(g\in\ker\varphi\), then \(\varphi(g)=\mathrm{id}_X\), so \(g\gamma=\gamma\) for all \(\gamma\in G\); in particular \(ge=e\), so \(g=e\). Hence \(\ker\varphi=\{e\}\), \(\varphi:G\to H\) is a bijection, and \(G\cong H\le\operatorname{Sym}(X)\).
+If \(|G|<\infty\), then \(|X|=|G|<\infty\). \(\blacksquare\)</p>
+
+<p><strong>Definition 4.5 (Orbits and stabilisers).</strong> Let \(G\curvearrowright X\) and \(x\in X\). The orbit of \(x\) is \(Gx=\{gx : g\in G\}\), and the stabiliser of \(x\) is \(\operatorname{Stab}_G(x)=\{g\in G : gx=x\}\).</p>
+
+<p><strong>Definition 4.6 (Transitive and faithful).</strong> The action is <em>transitive</em> if \(Gx=X\) for some (equivalently, every) \(x\in X\).
+It is <em>faithful</em> if every \(g\neq e\) moves some point, that is, \(gx\neq x\) for some \(x\in X\).
+Equivalently, an action is faithful if and only if its homomorphism \(\varphi:G\to\operatorname{Sym}(X)\) is injective.</p>
+</article>

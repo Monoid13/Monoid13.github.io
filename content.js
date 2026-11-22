@@ -112,6 +112,11 @@ window.SITE = {
         "file": "notes/cosets-lagrange.html"
       },
       {
+        "course": "Groups",
+        "title": "Group actions",
+        "file": "notes/group-actions.html"
+      },
+      {
         "course": "Vectors and Matrices",
         "title": "Laplace (cofactor) expansion of the determinant",
         "file": "notes/laplace-expansion.html"
