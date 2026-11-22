@@ -14,7 +14,7 @@
     sun: '<circle cx="12" cy="12" r="4.5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>',
     moon: '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>'
   };
-  var DEFAULT_ORDER = ["about", "news", "experience", "projects", "custom", "education", "publications", "skills", "puzzles", "contact"];
+  var DEFAULT_ORDER = ["about", "news", "tripos", "experience", "projects", "custom", "education", "publications", "skills", "puzzles", "contact"];
   var THEME_KEY = "site-theme";
   var root = document.documentElement;
   var app = document.getElementById("app");
@@ -119,6 +119,24 @@
           (img ? '<a class="news-img" href="' + esc(img) + '" target="_blank" rel="noopener"><img src="' + esc(img) + '" alt="' + esc(n.imageAlt || "") + '" loading="lazy"></a>' : "") +
           "</td></tr>";
       }).join("") + "</tbody></table>";
+    },
+    tripos: function (sec) {
+      var notes = items(sec.notes);
+      var parts = items(sec.parts).filter(function (p) { return p.name || p.courses; });
+      if (!parts.length) return "";
+      return (sec.intro ? '<p class="desc">' + inline(sec.intro) + "</p>" : "") + parts.map(function (p) {
+        return (p.name ? "<h3 class=\"part\">" + esc(p.name) + "</h3>" : "") + '<div class="courses">' + list(p.courses).map(function (c) {
+          var mine = notes.filter(function (n) { return String(n.course || "").trim().toLowerCase() === c.toLowerCase(); });
+          var body = mine.length ? mine.map(function (n) {
+            var f = safeUrl(n.file);
+            return '<div class="note-slot"' + (f ? ' data-src="' + esc(f) + '"' : "") + ">" +
+              (f ? '<p class="muted">Loading ' + esc(n.title || "notes") + "…</p>" : '<div class="prose">' + md(n.text) + "</div>") + "</div>";
+          }).join("") : '<p class="muted">Nothing here yet.</p>';
+          return '<details class="course"><summary>' + esc(c) +
+            (mine.length ? '<span class="count">' + mine.length + (mine.length === 1 ? " note" : " notes") + "</span>" : "") +
+            '</summary><div class="course-body">' + body + "</div></details>";
+        }).join("") + "</div>";
+      }).join("");
     },
     experience: function (sec) { return entries(sec.items, "role", "organization"); },
     education: function (sec) { return entries(sec.items, "degree", "institution"); },
@@ -314,6 +332,39 @@
     stopBanner = function () { if (raf) cancelAnimationFrame(raf); if (io) io.disconnect(); window.removeEventListener("resize", onResize); };
   }
 
+  /* ---------- Tripos notes: fetched when a course is opened, maths typeset with KaTeX ---------- */
+  var KATEX = "https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/";
+  var katexReady = null;
+  function loadScript(src) {
+    return new Promise(function (ok, fail) { var s = document.createElement("script"); s.src = src; s.onload = ok; s.onerror = fail; document.head.appendChild(s); });
+  }
+  function katex() {
+    if (!katexReady) {
+      var css = document.createElement("link"); css.rel = "stylesheet"; css.href = KATEX + "katex.min.css"; document.head.appendChild(css);
+      katexReady = loadScript(KATEX + "katex.min.js").then(function () { return loadScript(KATEX + "contrib/auto-render.min.js"); });
+    }
+    return katexReady;
+  }
+  function typeset(el) {
+    return katex().then(function () {
+      window.renderMathInElement(el, { throwOnError: false, delimiters: [
+        { left: "$$", right: "$$", display: true }, { left: "\\[", right: "\\]", display: true }, { left: "\\(", right: "\\)", display: false }] });
+    });
+  }
+  function loadNotes(d) {
+    Array.prototype.forEach.call(d.querySelectorAll(".note-slot"), function (slot) {
+      if (slot.getAttribute("data-done")) return;
+      slot.setAttribute("data-done", "1");
+      var src = slot.getAttribute("data-src");
+      var done = src ? fetch(src).then(function (r) { if (!r.ok) throw new Error(r.status); return r.text(); })
+        .then(function (html) { slot.innerHTML = html; }, function () {
+          slot.innerHTML = '<p class="muted">Could not load these notes. <a href="' + esc(src) + '">Open them directly</a>.</p>';
+          throw new Error("notes");
+        }) : Promise.resolve();
+      done.then(function () { return typeset(slot); }).catch(function () {});   // without KaTeX the notes still show, as plain TeX
+    });
+  }
+
   /* ---------- page ---------- */
   function setMeta(name, value) {
     var m = document.querySelector('meta[name="' + name + '"]');
@@ -359,6 +410,9 @@
       root.setAttribute("data-theme", next);
       if (!isPreview) { try { localStorage.setItem(THEME_KEY, next); } catch (e) {} }
       btn.innerHTML = themeIcon();
+    });
+    Array.prototype.forEach.call(app.querySelectorAll("details.course"), function (d) {
+      d.addEventListener("toggle", function () { if (d.open) loadNotes(d); });
     });
     Array.prototype.forEach.call(app.querySelectorAll(".reveal-btn"), function (b) {
       b.addEventListener("click", function () {

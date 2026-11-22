@@ -125,6 +125,25 @@ li::marker { color: var(--muted); }
 .fold > summary:hover .fold-hint, .fold > summary:focus-visible .fold-hint { color: var(--link); }
 .fold > summary:focus-visible { outline: 2px solid var(--link); outline-offset: 4px; border-radius: 4px; }
 
+/* Tripos resources */
+h3.part { font: 600 24px/1.2 "Cormorant Garamond", Georgia, serif; color: var(--water); margin: 22px 0 10px; }
+.courses { border-top: 1px solid var(--border); }
+details.course { border-bottom: 1px solid var(--border); }
+details.course > summary { list-style: none; cursor: pointer; display: flex; align-items: center; gap: 12px; padding: 12px 4px; font-size: 17px; font-weight: 400; }
+details.course > summary::-webkit-details-marker { display: none; }
+details.course > summary::before { content: ""; width: 7px; height: 7px; border-right: 2px solid var(--accent); border-bottom: 2px solid var(--accent);
+  transform: rotate(-45deg); transition: transform .2s ease; flex: none; margin: 0 4px 0 2px; }
+details.course[open] > summary::before { transform: rotate(45deg) translate(-2px, -2px); }
+details.course > summary:hover { color: var(--link); }
+details.course > summary:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; border-radius: 4px; }
+.count { margin-left: auto; font-size: 13px; color: var(--muted); border: 1px solid var(--border); border-radius: 999px; padding: 1px 10px; }
+.course-body { padding: 2px 4px 18px 30px; }
+.muted { color: var(--muted); }
+.note h4 { font: 600 22px/1.25 "Cormorant Garamond", Georgia, serif; margin: 6px 0 12px; }
+.note p { margin: 0 0 14px; }
+.note .katex-display { overflow-x: auto; overflow-y: hidden; padding: 4px 0; }
+.note .katex { font-size: 1.05em; }
+
 /* News */
 .news { border-collapse: collapse; width: 100%; font-size: 15.5px; }
 .news th { text-align: left; font-weight: 400; color: var(--water); white-space: nowrap; padding: 6px 22px 6px 0; vertical-align: top; width: 1%; }
@@ -179,4 +198,5 @@ ol.numbered p { margin: 4px 0; }
   .bar-row { grid-template-columns: 1fr 56px; }
   .bar-row .bar-track { grid-column: 1 / -1; grid-row: 2; }
   .news th { padding-right: 14px; }
+  .course-body { padding-left: 6px; }
 }
