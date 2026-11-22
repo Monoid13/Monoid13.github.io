@@ -6,7 +6,7 @@ Personal website for Joe Wu, served by GitHub Pages from `main`.
 - `content.js`: all text and settings (JSON after `window.SITE =`). `editor.html` edits it visually.
 - `assets/site.js` renders the pages; `assets/style.css` holds the water-and-gold theme (gold accent `#c9a227`, dark mode by default).
 - `notes/*.html`: Tripos notes, listed under `tripos.notes` in `content.js` with `course`, `title` and `file`. Add `"part": "definitions"` to show a note under the Definitions list instead of Part IA.
-- Definitions lists (e.g. `notes/groups-definitions.html`) are `<div class="defs">` of `<details class="def"><summary>Name <span class="def-ref">1.12</span></summary><div class="def-body"><p>…</p></div></details>`, registered with `"inline": true` and a `"countLabel"` such as `"19 definitions"`.
+- Definitions lists (e.g. `notes/groups-definitions.html`) are `<div class="defs">` of `<details class="def"><summary>Name</summary><div class="def-body"><p>…</p></div></details>`, registered with `"inline": true` and a `"countLabel"` such as `"19 definitions"`.
 
 ## Every change
 - Bump the `?v=N` number on the three asset links in `index.html`, or browsers keep showing cached files.
