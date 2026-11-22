@@ -201,6 +201,12 @@ details.note-fold[open] .note-title { border-bottom-color: var(--accent); }
   border-left: 3px solid color-mix(in srgb, var(--accent) 60%, transparent);
 }
 .note .katex { font-size: 1.08em; }
+.note .table-wrap { overflow-x: auto; margin: 8px 0 22px; }
+.note-table { border-collapse: collapse; width: 100%; font-size: 15.5px; line-height: 1.5; }
+.note-table th, .note-table td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+.note-table th { color: var(--link); font-weight: 500; white-space: nowrap; border-bottom: 2px solid color-mix(in srgb, var(--accent) 60%, transparent); }
+.note-table td:nth-child(2), .note-table td:last-child, .note-table th:nth-child(2), .note-table th:last-child { text-align: right; }
+.note-table tfoot td { font-weight: 500; border-top: 2px solid color-mix(in srgb, var(--accent) 60%, transparent); border-bottom: 0; }
 
 /* News */
 .news { border-collapse: collapse; width: 100%; font-size: 15.5px; }
