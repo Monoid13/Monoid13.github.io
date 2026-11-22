@@ -400,7 +400,7 @@
 
     app.innerHTML =
       '<header class="topbar"><div class="wrap">' +
-        (isHome ? "<span></span>" : '<a class="brand" href="#/">' + esc(p.name || s.siteTitle) + "</a>") +
+        "<span></span>" +                                  // the name only appears on the home page itself
         '<nav class="nav" aria-label="Pages">' + pages.map(function (x) {
           return '<a href="#/' + x.slug + '"' + (x === page ? ' class="active" aria-current="page"' : "") + ">" + esc(x.title) + "</a>";
         }).join("") +
