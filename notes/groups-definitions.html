@@ -26,6 +26,21 @@ the smallest subgroup containing \(X\). If \(G=\langle X\rangle\), then \(X\) ge
 <p>For \(n\ge3\), let \(X_n\subseteq\mathbb C\) be the regular \(n\)-gon with vertices \(e^{2\pi ik/n}\), \(k=0,\dots,n-1\). The dihedral group is \(D_{2n}=\operatorname{Isom}(X_n)\), and \(|D_{2n}|=2n\).</p>
 </div></details>
 
+<details class="def"><summary>Kite lemma</summary><div class="def-body">
+<p>Let \(x_1,x_2,y_1,y_2\in\mathbb C\). If \(|y_1-x_1|=|y_2-x_1|\) and \(|y_1-x_2|=|y_2-x_2|\), then \(x_2-x_1\) is perpendicular to \(y_2-y_1\).</p>
+<p><span class="def-label">Proof.</span> Expanding, \(|y_1-x|^2=|y_2-x|^2\) is equivalent to \(\operatorname{Re}\big((y_2-y_1)\overline{x}\big)=\tfrac12\big(|y_2|^2-|y_1|^2\big)\).
+Both \(x_1\) and \(x_2\) satisfy this, so subtracting gives \(\operatorname{Re}\big((y_2-y_1)\overline{(x_2-x_1)}\big)=0\), which says exactly that \(x_2-x_1\perp y_2-y_1\).
+Geometrically: \(x_1\) and \(x_2\) both lie on the perpendicular bisector of \(y_1y_2\). \(\blacksquare\)</p>
+</div></details>
+
+<details class="def"><summary>3 point lemma</summary><div class="def-body">
+<p>Let \(X\subseteq\mathbb C\) and \(f\in\operatorname{Isom}(X)\). If \(f\) fixes three non-collinear points \(x_1,x_2,x_3\in X\), then \(f=\mathrm{id}_X\).</p>
+<p><span class="def-label">Proof.</span> Suppose \(f(y)\neq y\) for some \(y\in X\). For \(i=1,2,3\),
+\(|f(y)-x_i|=|f(y)-f(x_i)|=|y-x_i|\), since \(f\) fixes \(x_i\) and preserves distance.
+By the kite lemma with \(y_1=y\), \(y_2=f(y)\): both \(x_2-x_1\) and \(x_3-x_1\) are perpendicular to the non-zero vector \(f(y)-y\).
+So they are parallel, and \(x_1,x_2,x_3\) are collinear, a contradiction. \(\blacksquare\)</p>
+</div></details>
+
 <details class="def"><summary>Homomorphism</summary><div class="def-body">
 <p>A map \(\varphi:G\to H\) between groups is a homomorphism if \(\varphi(gg')=\varphi(g)\varphi(g')\) for all \(g,g'\in G\).
 Its image is \(\operatorname{im}\varphi=\{\varphi(g):g\in G\}\) and its kernel is \(\ker\varphi=\{g\in G:\varphi(g)=e_H\}\).</p>
