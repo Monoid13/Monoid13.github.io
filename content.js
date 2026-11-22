@@ -117,7 +117,7 @@ window.SITE = {
         "title": "Definitions",
         "file": "notes/groups-definitions.html",
         "inline": true,
-        "countLabel": "21 definitions"
+        "countLabel": "30 definitions"
       },
       {
         "course": "Groups",
