@@ -139,6 +139,26 @@ details.course > summary:focus-visible { outline: 2px solid var(--link); outline
 .count { margin-left: auto; font-size: 13px; color: var(--muted); border: 1px solid var(--border); border-radius: 999px; padding: 1px 10px; }
 .course-body { padding: 2px 4px 18px 30px; }
 .muted { color: var(--muted); }
+details.note-fold {
+  margin: 10px 0 14px; border-radius: 12px;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 5%, var(--card)), var(--card));
+  border: 1px solid color-mix(in srgb, var(--accent) 70%, transparent);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 8%, transparent), 0 14px 34px -18px rgba(0, 0, 0, .55);
+}
+details.note-fold > summary { list-style: none; cursor: pointer; display: flex; align-items: center; gap: 14px; padding: 18px 24px; border-radius: 12px; }
+details.note-fold > summary::-webkit-details-marker { display: none; }
+details.note-fold > summary::before { content: ""; width: 8px; height: 8px; border-right: 2px solid var(--accent); border-bottom: 2px solid var(--accent);
+  transform: rotate(-45deg); transition: transform .2s ease; flex: none; }
+details.note-fold[open] > summary::before { transform: rotate(45deg) translate(-2px, -2px); }
+details.note-fold > summary:hover .note-title { color: var(--link); }
+details.note-fold > summary:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
+.note-title { font: 600 23px/1.3 "Cormorant Garamond", Georgia, serif; letter-spacing: .01em; padding-bottom: 4px; border-bottom: 2px solid transparent; transition: border-color .2s; }
+details.note-fold[open] .note-title { border-bottom-color: var(--accent); }
+.note-fold .note-slot { animation: note-in .25s ease; }
+@keyframes note-in { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
+.note-fold .note-slot > .muted { padding: 0 24px 18px 46px; margin: 0; }
+.note-fold .note { margin: 0; padding: 4px 40px 30px 46px; border: 0; border-radius: 0 0 12px 12px; background: none; box-shadow: none; }
+.note-fold .note h4 { display: none; }                  /* the title is already in the summary */
 .note {
   position: relative; margin: 10px 0 6px; padding: 34px 40px 30px; border-radius: 12px;
   background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 5%, var(--card)), var(--card));
@@ -228,6 +248,10 @@ ol.numbered p { margin: 4px 0; }
   .news th { padding-right: 14px; }
   .course-body { padding-left: 0; padding-right: 0; }
   .note { padding: 22px 18px; font-size: 16.5px; line-height: 1.8; }
+  details.note-fold > summary { padding: 16px 16px; }
+  .note-title { font-size: 20px; }
+  .note-fold .note { padding: 4px 16px 22px; }
+  .note-fold .note-slot > .muted { padding: 0 16px 16px; }
   .note h4 { font-size: 23px; }
   .note .katex-display { padding: 10px 8px; }
   .note .katex-display > .katex { font-size: .88em; }
