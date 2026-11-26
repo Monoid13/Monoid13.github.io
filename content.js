@@ -102,6 +102,11 @@ window.SITE = {
     ],
     "notes": [
       {
+        "course": "Numbers and Sets",
+        "title": "Countable and uncountable sets",
+        "file": "notes/countability.html"
+      },
+      {
         "course": "Groups",
         "part": "definitions",
         "title": "Definitions",
